@@ -36,7 +36,7 @@ export const properties: Property[] = [
     image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
     description: "Experience elevated living at Azure Residences, a premier condominium development in the heart of Cebu Business Park. Enjoy breathtaking city views and world-class amenities.",
     amenities: ["Swimming Pool", "Gym", "Sky Lounge", "Parking", "24/7 Security"],
-    mapCoords: { lat: 10.3157, lng: 123.8854 }
+    mapCoords: { lat: 10.341760550303876, lng: 123.89746126025852 }
   },
   {
     id: "davao-house-1",
