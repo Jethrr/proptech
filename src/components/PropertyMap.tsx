@@ -8,8 +8,8 @@ interface PropertyMapProps {
 }
 
 const PropertyMap = ({ lat, lng, location, isBlurred = false }: PropertyMapProps) => {
-  // Using OpenStreetMap embed as a free alternative
-  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01}%2C${lat - 0.01}%2C${lng + 0.01}%2C${lat + 0.01}&layer=mapnik&marker=${lat}%2C${lng}`;
+  // Using Google Maps embed
+  const mapUrl = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3000!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sph!4v1699000000000!5m2!1sen!2sph`;
 
   return (
     <div className="glass-card rounded-xl overflow-hidden animate-fade-in">
