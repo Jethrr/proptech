@@ -8,8 +8,8 @@ interface PropertyMapProps {
 }
 
 const PropertyMap = ({ lat, lng, location, isBlurred = false }: PropertyMapProps) => {
-  // Using Google Maps embed
-  const mapUrl = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3000!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sph!4v1699000000000!5m2!1sen!2sph`;
+  // Using Google Maps embed with marker pin
+  const mapUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
 
   return (
     <div className="glass-card rounded-xl overflow-hidden animate-fade-in">
