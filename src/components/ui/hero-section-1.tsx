@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
 import kwentechLogo from '@/assets/kwentech.png'
-import heroImage from '@/assets/hero.png'
+import heroImage from '@/assets/hero-2.png'
 
 const transitionVariants = {
     item: {
