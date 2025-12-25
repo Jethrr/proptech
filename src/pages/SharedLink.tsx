@@ -50,7 +50,7 @@ const SharedLink = () => {
                 <Building2 className="h-6 w-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="font-bold text-lg leading-tight">PropQuote</h1>
+                <h1 className="font-bold text-lg leading-tight">KwenTech</h1>
                 <p className="text-xs text-muted-foreground">Property Details</p>
               </div>
             </div>
@@ -216,7 +216,7 @@ const SharedLink = () => {
       {/* Footer */}
       <footer className="border-t border-border bg-card/50 mt-12">
         <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-          <p>Shared via PropQuote — Real Estate CPQ Platform</p>
+          <p>Shared via KwenTech — Innovating Real Estate</p>
         </div>
       </footer>
     </div>

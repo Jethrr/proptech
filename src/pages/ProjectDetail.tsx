@@ -1,5 +1,5 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Bed, Bath, Maximize, Building2, Calendar, MapPin } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { Bed, Bath, Maximize, Building2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { properties, formatCurrency } from "@/data/properties";
@@ -9,17 +9,15 @@ import ShareButton from "@/components/ShareButton";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
 
   const property = properties.find((p) => p.id === id);
 
   if (!property) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="flex flex-col h-full items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-2">Project Not Found</h1>
           <p className="text-muted-foreground mb-4">The project you're looking for doesn't exist.</p>
-          <Button onClick={() => navigate("/")}>Back to Projects</Button>
         </div>
       </div>
     );
@@ -32,26 +30,11 @@ const ProjectDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/")}
-              className="gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </Button>
-            <ShareButton property={property} />
-          </div>
+    <div className="flex flex-col h-full">
+      <main className="flex-1 overflow-auto p-6">
+        <div className="flex justify-end mb-4">
+          <ShareButton property={property} />
         </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Property Info */}
           <div className="lg:col-span-2 space-y-6">
