@@ -45,7 +45,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img src={propQuoteLogo} alt="PropQoute Logo" className="h-16 w-auto" />
+              <img src={propQuoteLogo} alt="PropQoute Logo" className="h-20 w-auto" />
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2 text-muted-foreground">
