@@ -8,13 +8,15 @@ Here is the reformatted PRD based on your idea. I have filled in the strategic g
 
 # Overview
 
-**Product:** Real Estate "Revenue Recovery" Engine
+**Product:** KwenTech - Real Estate "Revenue Recovery" Engine
 
-**Problem:** Real estate agents lose thousands in commissions because they can’t keep up with old leads (dormant databases) and miss high-intent signals on social media. Existing tools are often "gated" (forcing users to sign up), which creates friction.
+**Brand:** KwenTech (targeting the Philippines real estate market)
 
-**Solution:** An agent-centric internal dashboard that automates lead "re-warming," identifies buyers from Facebook posts, and provides instant financial qualification (CPQ) so the agent only calls the "hottest" prospects.
+**Problem:** Real estate agents in the Philippines lose thousands in commissions because they can't keep up with old leads (dormant databases) and miss high-intent signals on social media. Existing tools are often "gated" (forcing users to sign up), which creates friction.
 
+**Solution:** A comprehensive real estate platform that empowers agents with AI-powered tools for lead management, opportunity discovery, and financial qualification. The platform provides a suite of integrated tools designed to help agents maximize their revenue potential through intelligent automation, social media insights, and instant financial calculations.
 
+**Market:** Philippines (Filipino real estate agents)
 
 # Core Features
 
@@ -25,7 +27,7 @@ Note: The goal only of this is to build a POC or Mock Website for this. So Just 
 * **Why:** To monetize "dead" data the agent already paid for.
 
 
-* **FB Intent Curator:**
+* **Matching Intent Curator (FB Intent Curator):**
 * **What:** Aggregates and filters Facebook posts/comments based on intent keywords (e.g., "moving to," "budget for house").
 * **Why:** To find "active" buyers in the wild before they hit a portal like Zillow.
 
@@ -35,16 +37,52 @@ Note: The goal only of this is to build a POC or Mock Website for this. So Just 
 * **Why:** Enables agents to provide instant, accurate financial answers to qualify leads during the first call.
 
 
+# Landing Page Features (Implemented)
+
+* **Hero Section:**
+* **What:** Animated hero section with navigation header, call-to-action buttons, and hero image showcasing the dashboard.
+* **Components:** HeroSection component with animated transitions, responsive navigation menu, and gradient backgrounds.
+* **Why:** First impression and conversion optimization for new visitors.
+
+* **Testimonials Section:**
+* **What:** Marquee-style testimonials from Filipino real estate agents showcasing success stories.
+* **Components:** TestimonialsSection component with rotating testimonials from agents like Maria Santos, Juan Dela Cruz, Ana Garcia, etc.
+* **Why:** Social proof and trust-building for the Philippines market.
+
+* **Features Section:**
+* **What:** Three-card layout highlighting the core features (AI Lead Reactivator, Matching Intent Curator, Smart CPQ Calculator).
+* **Why:** Clear value proposition communication.
+
+* **Benefits Section:**
+* **What:** Grid layout showing key benefits with statistics (47% conversion increase, 10,000+ leads reactivated monthly, 5 min setup time).
+* **Why:** Quantified value demonstration.
+
+* **Call-to-Action (CTA) Section:**
+* **What:** Prominent section with "Get Started Free" and "Sign In" buttons.
+* **Why:** Conversion funnel optimization.
+
+* **Footer:**
+* **What:** Comprehensive footer with company information, product links, company links, legal links, and social media icons (Facebook, Twitter, LinkedIn, Instagram, YouTube).
+* **Contact Info:** support@kwentech.com, +63 912 345 6789, Manila, Philippines
+* **Why:** Professional presence and navigation support.
 
 # User Experience
 
 * **User Personas:** The "Hustler" Agent (wants more deals, low tech-savviness) and the "Team Lead" (wants to optimize their team's existing database).
 * **Key User Flows:**
-1. **Reactivation:** Upload CSV -> AI analyzes "Last Contact" -> Generates SMS/Email drafts -> Agent hits "Send."
-2. **Discovery:** Connect FB Account -> View "High Intent" feed -> One-click save to "Hot Leads."
+1. **Landing Page:** Visit homepage -> View testimonials -> See features -> Click "Get Started Free" -> Register
+2. **Reactivation:** Upload CSV -> AI analyzes "Last Contact" -> Generates SMS/Email drafts -> Agent hits "Send."
+3. **Discovery:** Connect FB Account -> View "High Intent" feed -> One-click save to "Hot Leads."
 
 
-* **UI/UX Considerations:** Minimalist dashboard. Mobile-first (agents are in their cars). "One-click" actions to reduce friction.
+* **UI/UX Considerations:** 
+  - Modern, minimalist design with gradient accents
+  - Mobile-first responsive design (agents are in their cars)
+  - "One-click" actions to reduce friction
+  - Animated transitions and smooth scrolling
+  - Dark mode support
+  - Social proof through testimonials
+  - Professional branding with KwenTech logo
 
 </context>
 
@@ -52,21 +90,46 @@ Note: The goal only of this is to build a POC or Mock Website for this. So Just 
 
 # Technical Architecture
 
-* **System Components:** * Frontend: Next.js (React) for a snappy, responsive SPA.
-* Backend: Node.js (Supabase or Firebase for rapid "vibe coding" deployment).
+* **System Components:** 
+  * **Frontend:** React with Vite for a snappy, responsive SPA
+  * **UI Framework:** Tailwind CSS with shadcn/ui components
+  * **Routing:** React Router for navigation
+  * **Animations:** Framer Motion (via AnimatedGroup component)
+  * **Icons:** Lucide React
+  * **Backend:** (POC Phase) Mock data only - No real backend/API integration yet
+  * **Future Backend:** Node.js (Supabase or Firebase for rapid "vibe coding" deployment)
 
 
-* **Data Models:** * `Lead`: {Name, Contact, Source, Status, Sentiment_Score, Last_Interaction}.
-* `Opportunity`: {Post_Content, Platform, Intent_Level, Linked_Lead_ID}.
+* **Data Models:** 
+  * `Lead`: {Name, Contact, Source, Status, Sentiment_Score, Last_Interaction}
+  * `Opportunity`: {Post_Content, Platform, Intent_Level, Linked_Lead_ID}
+  * `Testimonial`: {Author: {Name, Handle, Avatar}, Text}
+  * `Feature`: {Icon, Title, Description, Color}
 
 
-* **APIs & Integrations:** * **OpenAI API:** For sentiment analysis and drafting re-engagement messages.
-* **Facebook Graph API:** For monitoring specific groups/posts (or a scraping middleware).
-* **Financial Math Engine:** Custom JS logic for CPQ calculations.
+* **APIs & Integrations (Future - Not in POC):** 
+  * **OpenAI API:** For sentiment analysis and drafting re-engagement messages
+  * **Facebook Graph API:** For monitoring specific groups/posts (or a scraping middleware)
+  * **Financial Math Engine:** Custom JS logic for CPQ calculations
+  * **Email/SMS Services:** Twilio or SendGrid for message delivery
+
+* **Current Implementation (POC):**
+  * Mock data files in `src/data/` directory
+  * UI components with static data
+  * No real API calls or external integrations
 
 
 
 # Development Roadmap
+
+* **Phase 0: Landing Page & Branding (COMPLETED):** 
+  - Hero section with navigation
+  - Testimonials section with Filipino agent testimonials
+  - Features showcase
+  - Benefits section with statistics
+  - CTA section
+  - Footer with company info and social links
+  - KwenTech branding and logo integration
 
 * **Phase 1: The Reactivator (MVP):** Focus on CSV upload, OpenAI-powered message generation, and a basic lead list view.
 * **Phase 2: The CPQ Engine:** Add the financial calculator tab. This provides immediate utility even without "data."
@@ -74,10 +137,11 @@ Note: The goal only of this is to build a POC or Mock Website for this. So Just 
 
 # Logical Dependency Chain
 
-1. **Auth & Database Schema:** Must have a place to store Leads and User settings first.
-2. **The "Calculator" (UI-Only):** Build the CPQ tool first. It’s a "quick win" that creates a usable tool in minutes.
-3. **CSV Parser & AI Logic:** Build the ability to import data and have the AI "read" it.
-4. **Outgoing Integration:** Connect the "Send" button to a mailto: or Twilio integration.
+1. **Landing Page & Branding (COMPLETED):** Hero, testimonials, features, benefits, CTA, and footer sections implemented.
+2. **Auth & Database Schema:** Must have a place to store Leads and User settings first.
+3. **The "Calculator" (UI-Only):** Build the CPQ tool first. It's a "quick win" that creates a usable tool in minutes.
+4. **CSV Parser & AI Logic:** Build the ability to import data and have the AI "read" it.
+5. **Outgoing Integration:** Connect the "Send" button to a mailto: or Twilio integration.
 
 # Risks and Mitigations
 
@@ -85,10 +149,36 @@ Note: The goal only of this is to build a POC or Mock Website for this. So Just 
 * **MVP Scoping:** Don't build a full CRM. Focus *only* on the "Recovery" aspect.
 * **AI Hallucinations:** AI might suggest weird financial figures. *Mitigation:* Use hard-coded math formulas for the CPQ; use AI only for text generation.
 
+# UI Components Library
+
+* **Hero Components:**
+  - `HeroSection`: Animated hero with navigation, CTA buttons, and hero image
+  - `AnimatedGroup`: Framer Motion wrapper for staggered animations
+
+* **Content Components:**
+  - `TestimonialsSection`: Marquee-style testimonials display
+  - Feature cards with icons and descriptions
+  - Statistics cards with metrics
+
+* **Navigation:**
+  - Responsive header with mobile menu
+  - Footer with multi-column layout
+  - Social media integration
+
+* **Styling:**
+  - Tailwind CSS with custom gradients
+  - Dark mode support
+  - Mobile-first responsive design
+  - Glass morphism effects
+
 # Appendix
 
-* **Math Logic:** Mortgage Formula: 
+* **Math Logic:** Mortgage Formula: (To be implemented in CPQ calculator)
 * **Prompt Engineering:** Store system prompts for "Agent Tone of Voice" in a dedicated config file.
+* **Brand Assets:** 
+  - Logo: `src/assets/kwentech.png`
+  - Hero Image: `src/assets/hero.png`
+  - Favicon: `public/favicon.png`
 
 </PRD>
 
