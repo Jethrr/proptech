@@ -70,6 +70,9 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      maxWidth: {
+        container: "1280px",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -95,6 +98,10 @@ export default {
           "0%, 100%": { boxShadow: "0 0 0 0 hsl(var(--accent) / 0.4)" },
           "50%": { boxShadow: "0 0 20px 5px hsl(var(--accent) / 0.2)" },
         },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(calc(-100% - var(--gap)))' }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -103,6 +110,7 @@ export default {
         "slide-in": "slide-in 0.3s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
         "pulse-glow": "pulse-glow 2s infinite",
+        marquee: 'marquee var(--duration) linear infinite',
       },
     },
   },
