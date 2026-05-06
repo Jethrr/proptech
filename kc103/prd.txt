@@ -1,0 +1,142 @@
+# Rental Management Platform PRD (POC)
+
+<context>
+
+# Overview
+
+**Product:** KwenTech Rental Management Platform  
+**Market:** Philippines (landlords managing multiple rental properties)
+
+**Problem:**  
+Landlords in the Philippines face common bottlenecks when managing multiple properties and tenants. Important tasks such as payment follow-ups, document handling, contract tracking, and rent collection are often done manually across spreadsheets, chat apps, and paper files. There is currently no simple centralized platform focused on this workflow.
+
+**Solution:**  
+A landlord-focused rental management platform where users can manage properties, tenants, contracts/documents, payment reminders, and invoices in one dashboard. The initial phase is a POC with mock data and UI-first flows.
+
+# Core Features (Current Scope)
+
+Note: Build as a **POC/mock website** first. Prioritize UI, UX, and realistic user flows with mock data. Real API integrations can follow later.
+
+1. **Properties Management**
+   - Central list of all property units (dorms, condos, apartments, Airbnb units, etc.).
+   - Property details: type, address, monthly rent, occupancy status, unit notes.
+   - Goal: landlord sees entire inventory in one page.
+
+2. **Tenants Management**
+   - Central tenant directory with profile and contact details.
+   - Link each tenant to current property/unit and active contract period.
+   - Track monthly due dates, payment status, and basic lease metadata.
+   - Goal: landlord quickly understands who occupies what and what is due.
+
+3. **Email Follow-Up Reminders**
+   - Send reminder emails for upcoming due dates, overdue rent, or custom messages.
+   - Preset templates + custom message composer.
+   - Reminder history log per tenant.
+   - Goal: reduce missed follow-ups and late collection.
+
+4. **Invoice Generator**
+   - Generate simple rent invoices per tenant per billing cycle.
+   - Auto-fill tenant, unit, rent amount,utilities readings, due date, and billing period.
+   - Download/share invoice (POC can simulate export action).
+   - Goal: standardize billing and reduce manual invoice creation.
+
+</context>
+
+<PRD>
+
+# Product Goals
+
+- Give landlords one place to manage rental operations.
+- Reduce manual admin work for collections and documentation.
+- Improve payment follow-up consistency.
+- Standardize invoice generation.
+
+# POC Scope
+
+**In Scope (Now):**
+- Dashboard UI and navigation
+- Properties list/detail views (mock data)
+- Tenants list/detail views (mock data)
+- Reminder composer and send simulation flow
+- Invoice generation flow (mock preview/export action)
+- Basic documents/contracts placeholders in tenant records
+
+**Out of Scope (Later Phases):**
+- Real payment gateway integration
+- Real email provider integration
+- E-signatures and legal automation
+- Accounting/tax filing integration
+- Multi-user roles and permissions
+
+# User Roles
+
+- **Primary User:** Landlord (single account owner)
+- **Future User:** Property manager/staff (optional in later versions)
+
+# Key User Flows
+
+1. **Property Setup**
+   - Landlord adds properties/units -> sets rent and occupancy -> saves records.
+
+2. **Tenant Assignment**
+   - Landlord creates tenant profile -> links tenant to unit -> sets due date and lease period.
+
+3. **Reminder Flow**
+   - Landlord opens tenant record -> selects reminder template or writes custom email -> sends reminder (POC simulation).
+
+4. **Invoice Flow**
+   - Landlord selects tenant -> generates invoice from template -> reviews summary -> exports/downloads (simulated in POC).
+
+# Data Model (POC-Level)
+
+- `Property`: id, name, type, address, monthlyRent, status, notes
+- `Tenant`: id, fullName, email, phone, propertyId, unitLabel, leaseStart, leaseEnd, dueDate, status
+- `Reminder`: id, tenantId, type, subject, body, scheduledAt, sentAt, status
+- `Invoice`: id, tenantId, propertyId, billingPeriod, amount, dueDate, status, createdAt
+- `Document`: id, tenantId, type, fileName, uploadDate, notes
+
+# Technical Direction
+
+- **Frontend:** React + Vite
+- **UI:** Tailwind CSS + shadcn/ui
+- **State/Data:** local mock JSON / in-memory state for POC
+- **Backend:** none for initial POC
+- **Future Backend Option:** Node.js + Supabase (auth, database, storage, email jobs)
+
+# Development Roadmap
+
+1. **Phase 1 - Foundation**
+   - Dashboard shell, navigation, and mock dataset structure
+   - Properties and tenants list pages
+
+2. **Phase 2 - Operations**
+   - Tenant detail pages with due-date and contract summary
+   - Reminder composer and send simulation
+
+3. **Phase 3 - Billing**
+   - Invoice generator UI and preview
+   - Invoice history and status badges
+
+4. **Phase 4 - Documents (POC Lite)**
+   - Document list/upload placeholders per tenant
+   - Basic contract metadata fields
+
+# Success Metrics (POC Validation)
+
+- Landlord can add and view properties in under 3 minutes
+- Landlord can create tenant + link to unit in under 2 minutes
+- Landlord can send a reminder flow in under 1 minute
+- Landlord can generate an invoice in under 1 minute
+
+# Risks and Mitigations
+
+- **Scope creep:** many possible landlord features.  
+  *Mitigation:* lock current scope to 4 core features only.
+
+- **Data complexity:** lease/payment edge cases can grow quickly.  
+  *Mitigation:* keep data model simple for POC; expand after usability feedback.
+
+- **Reminder delivery dependency (future):** real email integration may fail or be delayed.  
+  *Mitigation:* complete stable send simulation first before live provider integration.
+
+</PRD>

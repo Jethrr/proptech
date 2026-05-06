@@ -1,73 +1,43 @@
-# Welcome to your Lovable project
+# Supabase Auth Setup (Frontend + Backend)
 
-## Project info
+This workspace now has:
+- `kc103` as a Vite + React frontend with Supabase auth client
+- `backend` as an Express API that validates Supabase bearer tokens
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 1) Install dependencies
 
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+cd backend && npm install
+cd ../kc103 && npm install
 ```
 
-**Edit a file directly in GitHub**
+## 2) Configure env files
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Create these files by copying each example:
+- `backend/.env` from `backend/.env.example`
+- `kc103/.env` from `kc103/.env.example`
 
-**Use GitHub Codespaces**
+The Supabase URL and publishable key are already prefilled.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 3) Run both apps
 
-## What technologies are used for this project?
+```bash
+# terminal 1
+cd backend && npm run dev
 
-This project is built with:
+# terminal 2
+cd kc103 && npm run dev
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Implemented API endpoints
 
-## How can I deploy this project?
+- `POST /api/auth/signup` - create user
+- `POST /api/auth/signin` - sign in user
+- `GET /api/auth/me` - return authenticated user
+- `GET /api/protected` - sample protected route
+- `GET /api/profile` - fetch user profile from Supabase
+- `PUT /api/profile` - upsert user profile (`full_name`)
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Supabase MCP changes applied
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Created `public.profiles` table with RLS policies allowing users to read/insert/update only their own profile rows.

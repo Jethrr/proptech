@@ -1,0 +1,16 @@
+*(Slide 3: The Story - The Collective Struggle)**
+**Speaker:**
+"To understand how painful this is, we didn't just guess. We interviewed several agents across the Philippines, and a consistent, painful story emerged.
+
+**Problem #1: The Waiting Game**
+They were tired of waiting days for developers to send simple price updates and computations. Every delay meant a lost opportunity, a missed commission, and another client slipping away. Because there was no instant way to calculate mortgage estimates, closing costs, and commissions, agents couldn't qualify leads during that crucial first call. By the time they got the numbers, the prospect had moved on.
+
+**Problem #2: The Excel Trap**
+Because there was no central platform to give them data, many of these agents tried to build one themselves. They created massive, manual Excel databases to track projects across Luzon, Visayas, and Mindanao. They did this to solve the **'Waiting Game'**—but here is the tragedy: **The 'Excel Trap' got them.**
+Almost every agent we spoke to admitted the same thing: *'I stopped updating my database because my workload was just too heavy.'* So these agents are sitting on thousands of dormant leads—dead data they already paid for—with no way to reactivate them.
+
+**Problem #3: Missing the Signal**
+While agents were buried in spreadsheets and waiting for calculations, high-intent buyers were posting on Facebook: *'Looking for a house in Makati,'* *'Budget for a condo,'* *'Moving to Cebu next month.'* But there was no way to find these signals. No way to aggregate and filter them. By the time these buyers hit a portal like Zillow, they were already talking to someone else.
+
+Three problems. One solution. That's why we built KwenTech."
+

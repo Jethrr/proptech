@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "name": "Editorial Fintech Soft System",
+    "description": "A warm, minimal, editorial-style fintech UI blending lifestyle imagery with soft surfaces, human-centric typography, and calm neutral tones.",
+    "style_keywords": [
+      "editorial",
+      "minimal",
+      "soft",
+      "warm",
+      "human-centered",
+      "calm",
+      "premium",
+      "airy",
+      "lifestyle-fintech"
+    ]
+  },
+  "color": {
+    "background": {
+      "main": "#FFFFFF",
+      "surface": "#FFFFFF",
+      "soft": "#F7F7F5"
+    },
+    "primary": {
+      "base": "#111111",
+      "usage": "text, headings"
+    },
+    "accent": {
+      "gold": "#E6A93D",
+      "gradient": [
+        "#F5C76A",
+        "#E6A93D"
+      ],
+      "usage": "primary CTA, highlights"
+    },
+    "neutral": {
+      "text_primary": "#111111",
+      "text_secondary": "#6B6B6B",
+      "border": "#E5E5E5"
+    }
+  },
+  "typography": {
+    "font_family": "Inter, system-ui, sans-serif",
+    "tone": "editorial + modern",
+    "weights": {
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600
+    }
+  }
+}
