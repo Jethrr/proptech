@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { MailPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,15 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { loadReminders, loadTenants, saveReminders } from "@/lib/rentalStorage";
-import { Reminder } from "@/data/rental";
+import { loadReminders, saveReminders } from "@/lib/rentalStorage";
+import { Reminder, Tenant } from "@/data/rental";
 import { useToast } from "@/hooks/use-toast";
+import { api } from "@/lib/api";
 
 const Reminders = () => {
   const { toast } = useToast();
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const tenants = useMemo(() => loadTenants(), []);
+  const [tenants, setTenants] = useState<Tenant[]>([]);
   const [formData, setFormData] = useState({
     tenantId: "",
     subject: "Rent due date reminder",
@@ -26,6 +27,18 @@ const Reminders = () => {
 
   useEffect(() => {
     setReminders(loadReminders());
+  }, []);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await api.getTenants();
+        setTenants(res.tenants as Tenant[]);
+      } catch {
+        setTenants([]);
+      }
+    };
+    void load();
   }, []);
 
   const sendReminder = () => {

@@ -3,12 +3,10 @@ import {
   Reminder,
   RentalProperty,
   Tenant,
-  UtilityBillingCycle,
   mockInvoices,
   mockReminders,
   mockRentalProperties,
   mockTenants,
-  mockUtilityBillingCycles,
 } from "@/data/rental";
 
 const KEYS = {
@@ -16,7 +14,6 @@ const KEYS = {
   tenants: "rental_tenants",
   reminders: "rental_reminders",
   invoices: "rental_invoices",
-  utilityCycles: "rental_utility_cycles",
 };
 
 function loadFromStorage<T>(key: string, fallback: T[]): T[] {
@@ -48,8 +45,3 @@ export const saveReminders = (data: Reminder[]): void =>
 
 export const loadInvoices = (): Invoice[] => loadFromStorage(KEYS.invoices, mockInvoices);
 export const saveInvoices = (data: Invoice[]): void => saveToStorage(KEYS.invoices, data);
-
-export const loadUtilityBillingCycles = (): UtilityBillingCycle[] =>
-  loadFromStorage(KEYS.utilityCycles, mockUtilityBillingCycles);
-export const saveUtilityBillingCycles = (data: UtilityBillingCycle[]): void =>
-  saveToStorage(KEYS.utilityCycles, data);

@@ -19,14 +19,45 @@ import Tenants from "./pages/Tenants";
 import Reminders from "./pages/Reminders";
 import Invoices from "./pages/Invoices";
 import Utilities from "./pages/Utilities";
+import PropertyDetail from "./pages/PropertyDetail";
 
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, loading } = useAuth();
+  const [showLoader, setShowLoader] = React.useState(loading);
+  const loadingStartedAtRef = React.useRef<number | null>(loading ? Date.now() : null);
 
-  if (loading) {
-    return <div className="p-6 text-sm text-muted-foreground">Loading account...</div>;
+  React.useEffect(() => {
+    if (loading) {
+      loadingStartedAtRef.current = Date.now();
+      setShowLoader(true);
+      return;
+    }
+
+    const minLoaderMs = 700;
+    const startedAt = loadingStartedAtRef.current ?? Date.now();
+    const elapsed = Date.now() - startedAt;
+    const remaining = Math.max(0, minLoaderMs - elapsed);
+
+    const timeoutId = window.setTimeout(() => {
+      setShowLoader(false);
+      loadingStartedAtRef.current = null;
+    }, remaining);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [loading]);
+
+  if (loading || showLoader) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
+        <div className="flex items-center gap-2" aria-label="Loading account" role="status">
+          <span className="h-3 w-3 animate-bounce rounded-full bg-primary [animation-delay:-0.3s]" />
+          <span className="h-3 w-3 animate-bounce rounded-full bg-accent [animation-delay:-0.15s]" />
+          <span className="h-3 w-3 animate-bounce rounded-full bg-primary" />
+        </div>
+      </div>
+    );
   }
   
   if (!isAuthenticated) {
@@ -81,6 +112,7 @@ const AppContent = () => {
           </header>
           <Routes>
             <Route path="/properties" element={<Index />} />
+            <Route path="/properties/:propertyId" element={<PropertyDetail />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/tenants" element={<Tenants />} />
             <Route path="/reminders" element={<Reminders />} />

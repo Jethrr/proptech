@@ -61,13 +61,15 @@ export const findCycleForUnitAndPeriod = (
   billingPeriod: string,
   periodStart?: string,
   periodEnd?: string,
+  unitId?: string,
 ): UtilityBillingCycle | undefined =>
-  cycles.find(
-    (cycle) => {
-      if (cycle.propertyId !== propertyId || cycle.unitLabel !== unitLabel) return false;
-      if (periodStart && periodEnd && cycle.periodStart && cycle.periodEnd) {
-        return cycle.periodStart === periodStart && cycle.periodEnd === periodEnd;
-      }
-      return normalizeBillingPeriod(cycle.billingPeriod) === normalizeBillingPeriod(billingPeriod);
-    },
-  );
+  cycles.find((cycle) => {
+    if (cycle.propertyId !== propertyId) return false;
+    const unitMatches =
+      unitId && cycle.unitId ? cycle.unitId === unitId : cycle.unitLabel === unitLabel;
+    if (!unitMatches) return false;
+    if (periodStart && periodEnd && cycle.periodStart && cycle.periodEnd) {
+      return cycle.periodStart === periodStart && cycle.periodEnd === periodEnd;
+    }
+    return normalizeBillingPeriod(cycle.billingPeriod) === normalizeBillingPeriod(billingPeriod);
+  });

@@ -31,6 +31,8 @@ export interface Tenant {
   email: string;
   phone: string;
   propertyId: string;
+  /** Normalized rental_property_units row id (API-backed tenants). */
+  unitId: string;
   unitLabel: string;
   leaseStart: string;
   leaseEnd: string;
@@ -67,6 +69,8 @@ export interface Invoice {
 export interface UtilityBillingCycle {
   id: string;
   propertyId: string;
+  /** Normalized rental_property_units row id (API-backed cycles). */
+  unitId: string;
   unitLabel: string;
   billingPeriod: string;
   periodStart?: string;
@@ -137,6 +141,7 @@ export const mockTenants: Tenant[] = [
     email: "alyssa.reyes@email.com",
     phone: "+63 917 111 2233",
     propertyId: "prop-1",
+    unitId: "u-2",
     unitLabel: "Room 203",
     leaseStart: "2026-01-01",
     leaseEnd: "2026-12-31",
@@ -150,6 +155,7 @@ export const mockTenants: Tenant[] = [
     email: "mark.dc@email.com",
     phone: "+63 917 555 9911",
     propertyId: "prop-2",
+    unitId: "u-5",
     unitLabel: "Unit 7B",
     leaseStart: "2025-11-01",
     leaseEnd: "2026-10-31",
@@ -163,6 +169,7 @@ export const mockTenants: Tenant[] = [
     email: "joan.v@email.com",
     phone: "+63 917 441 7788",
     propertyId: "prop-3",
+    unitId: "u-9",
     unitLabel: "Unit 3A",
     leaseStart: "2025-12-15",
     leaseEnd: "2026-12-14",
@@ -211,33 +218,3 @@ export const mockInvoices: Invoice[] = [
   },
 ];
 
-export const mockUtilityBillingCycles: UtilityBillingCycle[] = [
-  {
-    id: "util-1",
-    propertyId: "prop-1",
-    unitLabel: "Room 203",
-    billingPeriod: "May 2026",
-    periodStart: "2026-05-01",
-    periodEnd: "2026-05-31",
-    previousReading: 1100,
-    currentReading: 1240,
-    electricityRate: 12,
-    waterRate: 450,
-    additionalFees: 150,
-    createdAt: "2026-05-01",
-  },
-  {
-    id: "util-2",
-    propertyId: "prop-2",
-    unitLabel: "Unit 7B",
-    billingPeriod: "May 2026",
-    periodStart: "2026-05-01",
-    periodEnd: "2026-05-31",
-    previousReading: 8900,
-    currentReading: 9050,
-    electricityRate: 13,
-    waterRate: 600,
-    additionalFees: 300,
-    createdAt: "2026-05-01",
-  },
-];

@@ -112,26 +112,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border p-4">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={async () => {
-                await logout();
-                navigate("/login", { replace: true });
-              }}
-              tooltip="Log out"
-            >
-              <LogOut />
-              <span>Log out</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-        <div className="text-xs text-muted-foreground text-center group-data-[collapsible=icon]:hidden">
-          <p>KwenTech</p>
-          <p>Rental Platform</p>
-        </div>
-      </SidebarFooter>
+      
     </Sidebar>
   );
 }
