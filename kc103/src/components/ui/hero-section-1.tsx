@@ -148,15 +148,24 @@ export function HeroSection() {
 }
 
 const menuItems = [
-    { name: 'Features', href: '#features' },
-    { name: 'Benefits', href: '#benefits' },
     { name: 'How It Works', href: '#how-it-works' },
+    { name: 'Why KwenTech', href: '#benefits' },
+    { name: 'FAQ', href: '#faq' },
     { name: 'Get Started', href: '#get-started' },
 ]
 
 const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
+
+    const handleSectionScroll = (href: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+        if (!href.startsWith('#')) return
+        event.preventDefault()
+        const target = document.querySelector(href)
+        if (!target) return
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        setMenuState(false)
+    }
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -196,6 +205,7 @@ const HeroHeader = () => {
                                     <li key={index}>
                                         <Link
                                             to={item.href}
+                                            onClick={handleSectionScroll(item.href)}
                                             className="text-muted-foreground hover:text-accent-foreground block duration-150">
                                             <span>{item.name}</span>
                                         </Link>
@@ -211,6 +221,7 @@ const HeroHeader = () => {
                                         <li key={index}>
                                             <Link
                                                 to={item.href}
+                                                onClick={handleSectionScroll(item.href)}
                                                 className="text-muted-foreground hover:text-accent-foreground block duration-150">
                                                 <span>{item.name}</span>
                                             </Link>
