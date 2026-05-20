@@ -2,9 +2,20 @@ import { useEffect, useMemo, useState } from "react";
 import { Building2, Clock3, FileText, Mail, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
-import { Invoice, Reminder, RentalProperty, Tenant, formatPhp } from "@/data/rental";
+import {
+  Invoice,
+  Reminder,
+  RentalProperty,
+  Tenant,
+  formatPhp,
+} from "@/data/rental";
 import { loadInvoices, loadReminders } from "@/lib/rentalStorage";
 import { api } from "@/lib/api";
 
@@ -18,15 +29,19 @@ const Dashboard = () => {
 
   const [properties, setProperties] = useState<RentalProperty[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
-  const reminders = useMemo(() => loadReminders(), []);
-  const invoices = useMemo(() => loadInvoices(), []);
+  const storageScope = user?.id ?? null;
+  const reminders = useMemo(() => loadReminders(storageScope), [storageScope]);
+  const invoices = useMemo(() => loadInvoices(storageScope), [storageScope]);
   const [isDateDialogOpen, setIsDateDialogOpen] = useState(false);
   const [selectedDateStr, setSelectedDateStr] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [propsRes, tenantsRes] = await Promise.all([api.getProperties(), api.getTenants()]);
+        const [propsRes, tenantsRes] = await Promise.all([
+          api.getProperties(),
+          api.getTenants(),
+        ]);
         setProperties(propsRes.properties as RentalProperty[]);
         setTenants(tenantsRes.tenants as Tenant[]);
       } catch {
@@ -50,7 +65,10 @@ const Dashboard = () => {
     if (invoice.status !== "Paid") return sum;
     const dateStr = invoice.dueDate || invoice.createdAt;
     if (!dateStr) return sum;
-    const [y, m] = dateStr.slice(0, 10).split("-").map((v) => Number(v));
+    const [y, m] = dateStr
+      .slice(0, 10)
+      .split("-")
+      .map((v) => Number(v));
     if (y === currentYear && m === currentMonth + 1) {
       return sum + invoice.amount;
     }
@@ -60,13 +78,18 @@ const Dashboard = () => {
     if (invoice.status !== "Paid") return false;
     const dateStr = invoice.dueDate || invoice.createdAt;
     if (!dateStr) return false;
-    const [y, m] = dateStr.slice(0, 10).split("-").map((v) => Number(v));
+    const [y, m] = dateStr
+      .slice(0, 10)
+      .split("-")
+      .map((v) => Number(v));
     return y === currentYear && m === currentMonth + 1;
   }).length;
 
   const getInvoiceStatusBadgeClass = (status: Invoice["status"]) => {
-    if (status === "Paid") return "bg-emerald-100 text-emerald-800 border border-emerald-200";
-    if (status === "Sent") return "bg-blue-100 text-blue-800 border border-blue-200";
+    if (status === "Paid")
+      return "bg-emerald-100 text-emerald-800 border border-emerald-200";
+    if (status === "Sent")
+      return "bg-blue-100 text-blue-800 border border-blue-200";
     return "bg-amber-100 text-amber-800 border border-amber-200";
   };
   const recentInvoices = [...invoices].reverse().slice(0, 5);
@@ -205,9 +228,12 @@ const Dashboard = () => {
         <div className="rounded-2xl border bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-6 text-white">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold">Welcome back, {displayName}</h1>
+              <h1 className="text-2xl md:text-3xl font-bold">
+                Welcome back, {displayName}
+              </h1>
               <p className="text-sm text-white/80 mt-1">
-                Manage your properties, tenants, reminders, and invoices in one place.
+                Manage your properties, tenants, reminders, and invoices in one
+                place.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
@@ -233,8 +259,12 @@ const Dashboard = () => {
                   <Building2 className="h-4 w-4" />
                 </div>
                 <div className="text-right">
-                  <p className="text-xs font-medium text-white/70">Properties</p>
-                  <p className="mt-1 text-2xl font-bold leading-none">{properties.length}</p>
+                  <p className="text-xs font-medium text-white/70">
+                    Properties
+                  </p>
+                  <p className="mt-1 text-2xl font-bold leading-none">
+                    {properties.length}
+                  </p>
                   <p className="mt-2 text-xs text-white/70">
                     {occupiedUnits}/{totalUnits} units occupied
                   </p>
@@ -249,8 +279,12 @@ const Dashboard = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-medium text-white/70">Tenants</p>
-                  <p className="mt-1 text-2xl font-bold leading-none">{tenants.length}</p>
-                  <p className="mt-2 text-xs text-white/70">{overdueTenants.length} overdue accounts</p>
+                  <p className="mt-1 text-2xl font-bold leading-none">
+                    {tenants.length}
+                  </p>
+                  <p className="mt-2 text-xs text-white/70">
+                    {overdueTenants.length} overdue accounts
+                  </p>
                 </div>
               </div>
             </div>
@@ -262,8 +296,12 @@ const Dashboard = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-medium text-white/70">Reminders</p>
-                  <p className="mt-1 text-2xl font-bold leading-none">{reminders.length}</p>
-                  <p className="mt-2 text-xs text-white/70">Email follow-ups logged</p>
+                  <p className="mt-1 text-2xl font-bold leading-none">
+                    {reminders.length}
+                  </p>
+                  <p className="mt-2 text-xs text-white/70">
+                    Email follow-ups logged
+                  </p>
                 </div>
               </div>
             </div>
@@ -275,9 +313,12 @@ const Dashboard = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-medium text-white/70">Revenue</p>
-                  <p className="mt-1 text-2xl font-bold leading-none">{formatPhp(monthlyRevenue)}</p>
+                  <p className="mt-1 text-2xl font-bold leading-none">
+                    {formatPhp(monthlyRevenue)}
+                  </p>
                   <p className="mt-2 text-xs text-white/70">
-                    {paidInvoicesThisMonthCount} paid invoice{paidInvoicesThisMonthCount === 1 ? "" : "s"} this month
+                    {paidInvoicesThisMonthCount} paid invoice
+                    {paidInvoicesThisMonthCount === 1 ? "" : "s"} this month
                   </p>
                 </div>
               </div>
@@ -292,7 +333,8 @@ const Dashboard = () => {
                 <div>
                   <CardTitle className="text-base">Calendar</CardTitle>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {monthLabel} – rent due dates, reminders, and invoice due dates.
+                    {monthLabel} – rent due dates, reminders, and invoice due
+                    dates.
                   </p>
                 </div>
                 <div className="hidden sm:block rounded-lg border bg-background px-2.5 py-1">
@@ -312,7 +354,10 @@ const Dashboard = () => {
               </div>
               <div className="grid grid-cols-7 gap-2 text-xs">
                 {Array.from({ length: startWeekday }).map((_, idx) => (
-                  <div key={`empty-${idx}`} className="h-20 rounded-lg border bg-muted/30" />
+                  <div
+                    key={`empty-${idx}`}
+                    className="h-20 rounded-lg border bg-muted/30"
+                  />
                 ))}
                 {Array.from({ length: daysInMonth }).map((_, index) => {
                   const day = index + 1;
@@ -327,7 +372,9 @@ const Dashboard = () => {
                       tabIndex={0}
                       aria-label={`View details for ${dateStr}`}
                       className={`h-20 rounded-lg border p-2 flex flex-col gap-1 overflow-hidden ${
-                        isToday ? "border-slate-900 bg-slate-900/5" : "bg-muted/30"
+                        isToday
+                          ? "border-slate-900 bg-slate-900/5"
+                          : "bg-muted/30"
                       }`}
                       onClick={() => openDayDetails(dateStr)}
                       onKeyDown={(e) => {
@@ -369,7 +416,9 @@ const Dashboard = () => {
                           );
                         })}
                         {events.length > 3 ? (
-                          <div className="text-[10px] text-muted-foreground">+{events.length - 3} more</div>
+                          <div className="text-[10px] text-muted-foreground">
+                            +{events.length - 3} more
+                          </div>
                         ) : null}
                       </div>
                     </div>
@@ -385,7 +434,9 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent className="p-6 space-y-3">
               {recentInvoices.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No invoices yet.</p>
+                <p className="text-sm text-muted-foreground">
+                  No invoices yet.
+                </p>
               ) : (
                 recentInvoices.map((invoice) => {
                   const tenant = tenants.find((t) => t.id === invoice.tenantId);
@@ -401,14 +452,21 @@ const Dashboard = () => {
                       className={`flex items-center justify-between rounded-xl border p-4 transition hover:shadow-sm ${statusRowClass}`}
                     >
                       <div>
-                        <p className="font-medium leading-tight">{tenant?.fullName ?? "Unknown Tenant"}</p>
+                        <p className="font-medium leading-tight">
+                          {tenant?.fullName ?? "Unknown Tenant"}
+                        </p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {invoice.billingPeriod} - Due {invoice.dueDate}
                         </p>
                       </div>
                       <div className="flex items-center gap-3">
-                        <p className="font-semibold">{formatPhp(invoice.amount)}</p>
-                        <Badge className={getInvoiceStatusBadgeClass(invoice.status)} variant="outline">
+                        <p className="font-semibold">
+                          {formatPhp(invoice.amount)}
+                        </p>
+                        <Badge
+                          className={getInvoiceStatusBadgeClass(invoice.status)}
+                          variant="outline"
+                        >
                           {invoice.status}
                         </Badge>
                       </div>
@@ -428,7 +486,9 @@ const Dashboard = () => {
           </DialogHeader>
 
           {selectedEvents.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No events on this date.</p>
+            <p className="text-sm text-muted-foreground">
+              No events on this date.
+            </p>
           ) : (
             <div className="space-y-3 pt-2">
               {selectedEvents
@@ -453,11 +513,13 @@ const Dashboard = () => {
                           <p className="font-medium">{ev.label}</p>
                           {ev.type === "rent-due" ? (
                             <p className="text-xs text-muted-foreground">
-                              Due day: {ev.dueDay} • Payment status: {ev.paymentStatus}
+                              Due day: {ev.dueDay} • Payment status:{" "}
+                              {ev.paymentStatus}
                             </p>
                           ) : ev.type === "reminder" ? (
                             <p className="text-xs text-muted-foreground">
-                              Scheduled: {ev.scheduledAt.slice(0, 10)} • Status: {ev.status}
+                              Scheduled: {ev.scheduledAt.slice(0, 10)} • Status:{" "}
+                              {ev.status}
                             </p>
                           ) : (
                             <p className="text-xs text-muted-foreground">
@@ -467,20 +529,36 @@ const Dashboard = () => {
                         </div>
 
                         <Badge className={chipClasses} variant="outline">
-                          {ev.type === "rent-due" ? "Rent Due" : ev.type === "reminder" ? "Reminder" : "Invoice"}
+                          {ev.type === "rent-due"
+                            ? "Rent Due"
+                            : ev.type === "reminder"
+                              ? "Reminder"
+                              : "Invoice"}
                         </Badge>
                       </div>
 
                       {ev.type === "reminder" ? (
-                        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{ev.message}</p>
+                        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                          {ev.message}
+                        </p>
                       ) : null}
 
                       {ev.type === "invoice-due" ? (
                         <div className="mt-3 flex items-center justify-between gap-3">
-                          <p className="text-sm text-muted-foreground">Amount</p>
+                          <p className="text-sm text-muted-foreground">
+                            Amount
+                          </p>
                           <div className="flex items-center gap-3">
-                            <p className="font-semibold">{formatPhp(ev.amount)}</p>
-                            <Badge variant={ev.invoiceStatus === "Paid" ? "default" : "secondary"}>
+                            <p className="font-semibold">
+                              {formatPhp(ev.amount)}
+                            </p>
+                            <Badge
+                              variant={
+                                ev.invoiceStatus === "Paid"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                            >
                               {ev.invoiceStatus}
                             </Badge>
                           </div>
@@ -498,4 +576,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

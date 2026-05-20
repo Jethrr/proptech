@@ -16,9 +16,20 @@ const KEYS = {
   invoices: "rental_invoices",
 };
 
-function loadFromStorage<T>(key: string, fallback: T[]): T[] {
+const STORAGE_PREFIX = "kc103:rental";
+
+const scopedKey = (key: string, ownerId?: string | null): string =>
+  ownerId
+    ? `${STORAGE_PREFIX}:${ownerId}:${key}`
+    : `${STORAGE_PREFIX}:shared:${key}`;
+
+function loadFromStorage<T>(
+  key: string,
+  fallback: T[],
+  ownerId?: string | null,
+): T[] {
   try {
-    const raw = localStorage.getItem(key);
+    const raw = localStorage.getItem(scopedKey(key, ownerId));
     if (!raw) return fallback;
     return JSON.parse(raw) as T[];
   } catch {
@@ -26,22 +37,40 @@ function loadFromStorage<T>(key: string, fallback: T[]): T[] {
   }
 }
 
-function saveToStorage<T>(key: string, data: T[]): void {
-  localStorage.setItem(key, JSON.stringify(data));
+function saveToStorage<T>(
+  key: string,
+  data: T[],
+  ownerId?: string | null,
+): void {
+  localStorage.setItem(scopedKey(key, ownerId), JSON.stringify(data));
 }
 
-export const loadRentalProperties = (): RentalProperty[] =>
-  loadFromStorage(KEYS.properties, mockRentalProperties);
-export const saveRentalProperties = (data: RentalProperty[]): void =>
-  saveToStorage(KEYS.properties, data);
+export const loadRentalProperties = (
+  ownerId?: string | null,
+): RentalProperty[] =>
+  loadFromStorage(
+    KEYS.properties,
+    ownerId ? [] : mockRentalProperties,
+    ownerId,
+  );
+export const saveRentalProperties = (
+  data: RentalProperty[],
+  ownerId?: string | null,
+): void => saveToStorage(KEYS.properties, data, ownerId);
 
-export const loadTenants = (): Tenant[] => loadFromStorage(KEYS.tenants, mockTenants);
-export const saveTenants = (data: Tenant[]): void => saveToStorage(KEYS.tenants, data);
+export const loadTenants = (ownerId?: string | null): Tenant[] =>
+  loadFromStorage(KEYS.tenants, ownerId ? [] : mockTenants, ownerId);
+export const saveTenants = (data: Tenant[], ownerId?: string | null): void =>
+  saveToStorage(KEYS.tenants, data, ownerId);
 
-export const loadReminders = (): Reminder[] =>
-  loadFromStorage(KEYS.reminders, mockReminders);
-export const saveReminders = (data: Reminder[]): void =>
-  saveToStorage(KEYS.reminders, data);
+export const loadReminders = (ownerId?: string | null): Reminder[] =>
+  loadFromStorage(KEYS.reminders, ownerId ? [] : mockReminders, ownerId);
+export const saveReminders = (
+  data: Reminder[],
+  ownerId?: string | null,
+): void => saveToStorage(KEYS.reminders, data, ownerId);
 
-export const loadInvoices = (): Invoice[] => loadFromStorage(KEYS.invoices, mockInvoices);
-export const saveInvoices = (data: Invoice[]): void => saveToStorage(KEYS.invoices, data);
+export const loadInvoices = (ownerId?: string | null): Invoice[] =>
+  loadFromStorage(KEYS.invoices, ownerId ? [] : mockInvoices, ownerId);
+export const saveInvoices = (data: Invoice[], ownerId?: string | null): void =>
+  saveToStorage(KEYS.invoices, data, ownerId);

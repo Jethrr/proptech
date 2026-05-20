@@ -2,18 +2,31 @@ import { useEffect, useState } from "react";
 import { MailPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { loadReminders, saveReminders } from "@/lib/rentalStorage";
 import { Reminder, Tenant } from "@/data/rental";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Reminders = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [tenants, setTenants] = useState<Tenant[]>([]);
@@ -26,8 +39,8 @@ const Reminders = () => {
   });
 
   useEffect(() => {
-    setReminders(loadReminders());
-  }, []);
+    setReminders(loadReminders(user?.id));
+  }, [user?.id]);
 
   useEffect(() => {
     const load = async () => {
@@ -54,9 +67,12 @@ const Reminders = () => {
     };
     const updated = [next, ...reminders];
     setReminders(updated);
-    saveReminders(updated);
+    saveReminders(updated, user?.id);
     setIsDialogOpen(false);
-    toast({ title: "Reminder sent", description: "Email follow-up logged using mock send flow." });
+    toast({
+      title: "Reminder sent",
+      description: "Email follow-up logged using mock send flow.",
+    });
   };
 
   return (
@@ -65,7 +81,9 @@ const Reminders = () => {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl font-bold">Email Follow-Up Reminders</h1>
-            <p className="text-muted-foreground">Send due-date reminders or custom payment follow-ups.</p>
+            <p className="text-muted-foreground">
+              Send due-date reminders or custom payment follow-ups.
+            </p>
           </div>
           <Button onClick={() => setIsDialogOpen(true)} className="gap-2 w-fit">
             <MailPlus className="h-4 w-4" /> New Reminder
@@ -78,7 +96,9 @@ const Reminders = () => {
           </CardHeader>
           <CardContent className="space-y-3">
             {reminders.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No reminders sent yet.</p>
+              <p className="text-sm text-muted-foreground">
+                No reminders sent yet.
+              </p>
             ) : (
               reminders.map((reminder) => {
                 const tenant = tenants.find((t) => t.id === reminder.tenantId);
@@ -86,10 +106,13 @@ const Reminders = () => {
                   <div key={reminder.id} className="rounded-lg border p-3">
                     <p className="font-medium">{reminder.subject}</p>
                     <p className="text-sm text-muted-foreground">
-                      To: {tenant?.fullName ?? "Unknown tenant"} ({tenant?.email ?? "N/A"})
+                      To: {tenant?.fullName ?? "Unknown tenant"} (
+                      {tenant?.email ?? "N/A"})
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Scheduled: {new Date(reminder.scheduledAt).toLocaleString()} | Status: {reminder.status}
+                      Scheduled:{" "}
+                      {new Date(reminder.scheduledAt).toLocaleString()} |
+                      Status: {reminder.status}
                     </p>
                   </div>
                 );
@@ -108,7 +131,9 @@ const Reminders = () => {
                 <Label>Tenant</Label>
                 <Select
                   value={formData.tenantId}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, tenantId: value }))}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, tenantId: value }))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select tenant" />
@@ -126,7 +151,12 @@ const Reminders = () => {
                 <Label>Subject</Label>
                 <Input
                   value={formData.subject}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, subject: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      subject: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div className="grid gap-2">
@@ -134,7 +164,12 @@ const Reminders = () => {
                 <Textarea
                   className="min-h-[120px]"
                   value={formData.message}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      message: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div className="grid gap-2">
@@ -142,14 +177,27 @@ const Reminders = () => {
                 <Input
                   type="datetime-local"
                   value={formData.scheduledAt}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, scheduledAt: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      scheduledAt: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                >
                   Cancel
                 </Button>
-                <Button onClick={sendReminder} disabled={!formData.tenantId || !formData.subject || !formData.message}>
+                <Button
+                  onClick={sendReminder}
+                  disabled={
+                    !formData.tenantId || !formData.subject || !formData.message
+                  }
+                >
                   Send Reminder
                 </Button>
               </div>

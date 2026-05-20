@@ -2,26 +2,39 @@ import { useState, useEffect } from "react";
 import { Facebook, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import FBConnection from "@/components/FBIntentCurator/FBConnection";
 import IntentFeed from "@/components/FBIntentCurator/IntentFeed";
 import OpportunityCard from "@/components/FBIntentCurator/OpportunityCard";
 import { Opportunity } from "@/data/leads";
 import { mockOpportunities } from "@/data/leads";
-import { loadOpportunitiesFromStorage, saveOpportunitiesToStorage } from "@/lib/mockData";
+import {
+  loadOpportunitiesFromStorage,
+  saveOpportunitiesToStorage,
+} from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const FBIntentCurator = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [isConnected, setIsConnected] = useState(false);
   const [keywords, setKeywords] = useState<string[]>([]);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
-  const [savedOpportunities, setSavedOpportunities] = useState<Opportunity[]>([]);
+  const [savedOpportunities, setSavedOpportunities] = useState<Opportunity[]>(
+    [],
+  );
   const [activeTab, setActiveTab] = useState("feed");
 
   useEffect(() => {
     // Load saved opportunities from storage
-    const stored = loadOpportunitiesFromStorage();
+    const stored = loadOpportunitiesFromStorage(user?.id);
     if (stored.length > 0) {
       setSavedOpportunities(stored);
     }
@@ -40,13 +53,13 @@ const FBIntentCurator = () => {
 
   const handleSaveOpportunity = (opportunity: Opportunity) => {
     // Check if already saved
-    if (savedOpportunities.some(opp => opp.id === opportunity.id)) {
+    if (savedOpportunities.some((opp) => opp.id === opportunity.id)) {
       return;
     }
 
     const updated = [...savedOpportunities, opportunity];
     setSavedOpportunities(updated);
-    saveOpportunitiesToStorage(updated);
+    saveOpportunitiesToStorage(updated, user?.id);
 
     toast({
       title: "Opportunity saved",
@@ -58,9 +71,11 @@ const FBIntentCurator = () => {
   };
 
   const handleRemoveSaved = (opportunityId: string) => {
-    const updated = savedOpportunities.filter(opp => opp.id !== opportunityId);
+    const updated = savedOpportunities.filter(
+      (opp) => opp.id !== opportunityId,
+    );
     setSavedOpportunities(updated);
-    saveOpportunitiesToStorage(updated);
+    saveOpportunitiesToStorage(updated, user?.id);
 
     toast({
       title: "Opportunity removed",
@@ -68,7 +83,7 @@ const FBIntentCurator = () => {
     });
   };
 
-  const savedOpportunityIds = new Set(savedOpportunities.map(opp => opp.id));
+  const savedOpportunityIds = new Set(savedOpportunities.map((opp) => opp.id));
 
   return (
     <div className="flex flex-col h-full">
@@ -78,7 +93,8 @@ const FBIntentCurator = () => {
             Discover High-Intent Buyers
           </h2>
           <p className="text-muted-foreground">
-            Monitor Facebook for buying signals and save opportunities to Hot Leads
+            Monitor Facebook for buying signals and save opportunities to Hot
+            Leads
           </p>
         </div>
 
@@ -97,26 +113,40 @@ const FBIntentCurator = () => {
           <div className="lg:col-span-2 grid grid-cols-2 gap-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Total Opportunities</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Total Opportunities
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{opportunities.length}</div>
-                <p className="text-xs text-muted-foreground mt-1">Found in feed</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Found in feed
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Saved to Hot Leads</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Saved to Hot Leads
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-indigo-600">{savedOpportunities.length}</div>
-                <p className="text-xs text-muted-foreground mt-1">Ready to contact</p>
+                <div className="text-2xl font-bold text-indigo-600">
+                  {savedOpportunities.length}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Ready to contact
+                </p>
               </CardContent>
             </Card>
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-6"
+        >
           <TabsList>
             <TabsTrigger value="feed">Intent Feed</TabsTrigger>
             <TabsTrigger value="saved">
@@ -153,7 +183,8 @@ const FBIntentCurator = () => {
                 <CardContent className="py-12 text-center">
                   <Bookmark className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
                   <p className="text-muted-foreground">
-                    No saved opportunities yet. Start saving from the Intent Feed!
+                    No saved opportunities yet. Start saving from the Intent
+                    Feed!
                   </p>
                 </CardContent>
               </Card>
@@ -186,4 +217,3 @@ const FBIntentCurator = () => {
 };
 
 export default FBIntentCurator;
-

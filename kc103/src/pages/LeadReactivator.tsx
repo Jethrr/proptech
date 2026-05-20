@@ -15,9 +15,11 @@ import MessageGenerator from "@/components/LeadReactivator/MessageGenerator";
 import { Lead } from "@/data/leads";
 import { loadLeadsFromStorage, saveLeadsToStorage } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const LeadReactivator = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
   const [showUpload, setShowUpload] = useState(false);
@@ -27,19 +29,19 @@ const LeadReactivator = () => {
 
   useEffect(() => {
     // Load leads from storage
-    const storedLeads = loadLeadsFromStorage();
+    const storedLeads = loadLeadsFromStorage(user?.id);
     setLeads(storedLeads);
-  }, []);
+  }, [user?.id]);
 
   const handleLeadsParsed = (newLeads: Lead[]) => {
     // Merge with existing leads, avoiding duplicates
-    const existingIds = new Set(leads.map(l => l.id));
-    const uniqueNewLeads = newLeads.filter(l => !existingIds.has(l.id));
-    
+    const existingIds = new Set(leads.map((l) => l.id));
+    const uniqueNewLeads = newLeads.filter((l) => !existingIds.has(l.id));
+
     const updatedLeads = [...leads, ...uniqueNewLeads];
     setLeads(updatedLeads);
-    saveLeadsToStorage(updatedLeads);
-    
+    saveLeadsToStorage(updatedLeads, user?.id);
+
     toast({
       title: "Leads imported",
       description: `Successfully imported ${uniqueNewLeads.length} new lead${uniqueNewLeads.length > 1 ? "s" : ""}.`,
@@ -50,10 +52,10 @@ const LeadReactivator = () => {
   };
 
   const handleSelectLead = (leadId: string) => {
-    setSelectedLeads(prev =>
+    setSelectedLeads((prev) =>
       prev.includes(leadId)
-        ? prev.filter(id => id !== leadId)
-        : [...prev, leadId]
+        ? prev.filter((id) => id !== leadId)
+        : [...prev, leadId],
     );
   };
 
@@ -61,23 +63,27 @@ const LeadReactivator = () => {
     if (selectedLeads.length === leads.length) {
       setSelectedLeads([]);
     } else {
-      setSelectedLeads(leads.map(l => l.id));
+      setSelectedLeads(leads.map((l) => l.id));
     }
   };
 
   const handleMessagesSent = () => {
     // Update lead statuses to "Reactivated"
-    const updatedLeads = leads.map(lead =>
+    const updatedLeads = leads.map((lead) =>
       selectedLeads.includes(lead.id)
-        ? { ...lead, status: "Reactivated" as const, lastInteraction: new Date().toISOString() }
-        : lead
+        ? {
+            ...lead,
+            status: "Reactivated" as const,
+            lastInteraction: new Date().toISOString(),
+          }
+        : lead,
     );
-    
+
     setLeads(updatedLeads);
-    saveLeadsToStorage(updatedLeads);
+    saveLeadsToStorage(updatedLeads, user?.id);
     setSelectedLeads([]);
     setShowMessages(false);
-    
+
     toast({
       title: "Leads reactivated",
       description: "Selected leads have been marked as reactivated.",
@@ -96,12 +102,10 @@ const LeadReactivator = () => {
 
   const handleSaveLead = (leadData: Lead) => {
     let updatedLeads: Lead[];
-    
+
     if (editingLead) {
       // Update existing lead
-      updatedLeads = leads.map((l) =>
-        l.id === editingLead.id ? leadData : l
-      );
+      updatedLeads = leads.map((l) => (l.id === editingLead.id ? leadData : l));
       toast({
         title: "Lead updated",
         description: `${leadData.name} has been updated successfully.`,
@@ -116,7 +120,7 @@ const LeadReactivator = () => {
     }
 
     setLeads(updatedLeads);
-    saveLeadsToStorage(updatedLeads);
+    saveLeadsToStorage(updatedLeads, user?.id);
     setIsDialogOpen(false);
     setEditingLead(undefined);
   };
@@ -125,18 +129,18 @@ const LeadReactivator = () => {
     const lead = leads.find((l) => l.id === leadId);
     const updatedLeads = leads.filter((l) => l.id !== leadId);
     setLeads(updatedLeads);
-    saveLeadsToStorage(updatedLeads);
-    
+    saveLeadsToStorage(updatedLeads, user?.id);
+
     // Remove from selected leads if it was selected
     setSelectedLeads(selectedLeads.filter((id) => id !== leadId));
-    
+
     toast({
       title: "Lead deleted",
       description: lead ? `${lead.name} has been deleted.` : "Lead deleted.",
     });
   };
 
-  const selectedLeadObjects = leads.filter(l => selectedLeads.includes(l.id));
+  const selectedLeadObjects = leads.filter((l) => selectedLeads.includes(l.id));
 
   // Show message generator if selected
   if (showMessages && selectedLeadObjects.length > 0) {
@@ -145,13 +149,8 @@ const LeadReactivator = () => {
         <main className="flex-1 overflow-auto p-6">
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-2xl md:text-3xl font-bold">
-                Contact Leads
-              </h2>
-              <Button
-                variant="outline"
-                onClick={() => setShowMessages(false)}
-              >
+              <h2 className="text-2xl md:text-3xl font-bold">Contact Leads</h2>
+              <Button variant="outline" onClick={() => setShowMessages(false)}>
                 Back to Leads
               </Button>
             </div>
@@ -173,14 +172,9 @@ const LeadReactivator = () => {
       <main className="flex-1 overflow-auto p-6">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-2xl md:text-3xl font-bold">
-              Manage Leads
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Manage Leads</h2>
             <div className="flex gap-2">
-              <Button
-                onClick={handleAddLead}
-                className="gap-2"
-              >
+              <Button onClick={handleAddLead} className="gap-2">
                 <Plus className="h-4 w-4" />
                 Add Lead
               </Button>
@@ -193,10 +187,7 @@ const LeadReactivator = () => {
                 {showUpload ? "Hide Upload" : "Import Leads"}
               </Button>
               {selectedLeads.length > 0 && (
-                <Button
-                  onClick={() => setShowMessages(true)}
-                  className="gap-2"
-                >
+                <Button onClick={() => setShowMessages(true)} className="gap-2">
                   <MessageSquare className="h-4 w-4" />
                   Generate Messages ({selectedLeads.length})
                 </Button>
@@ -263,4 +254,3 @@ const LeadReactivator = () => {
 };
 
 export default LeadReactivator;
-

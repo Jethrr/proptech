@@ -15,12 +15,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Invoice, RentalProperty, Tenant, UtilityBillingCycle, formatPhp } from "@/data/rental";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Invoice,
+  RentalProperty,
+  Tenant,
+  UtilityBillingCycle,
+  formatPhp,
+} from "@/data/rental";
 import { loadInvoices, saveInvoices } from "@/lib/rentalStorage";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   calculateUtilityCharge,
   findCycleForUnitAndPeriod,
@@ -30,6 +48,7 @@ import {
 
 const Invoices = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [properties, setProperties] = useState<RentalProperty[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [utilityCycles, setUtilityCycles] = useState<UtilityBillingCycle[]>([]);
@@ -50,35 +69,42 @@ const Invoices = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const [propsRes, tenantsRes, cyclesRes, invoicesRes] = await Promise.all([
-          api.getProperties(),
-          api.getTenants(),
-          api.getUtilityBillingCycles(),
-          api.getInvoices(),
-        ]);
+        const [propsRes, tenantsRes, cyclesRes, invoicesRes] =
+          await Promise.all([
+            api.getProperties(),
+            api.getTenants(),
+            api.getUtilityBillingCycles(),
+            api.getInvoices(),
+          ]);
         setProperties(propsRes.properties as RentalProperty[]);
         setTenants(tenantsRes.tenants as Tenant[]);
         setUtilityCycles(cyclesRes.cycles as UtilityBillingCycle[]);
         const apiInvoices = invoicesRes.invoices as Invoice[];
         setInvoices(apiInvoices);
-        saveInvoices(apiInvoices);
+        saveInvoices(apiInvoices, user?.id);
       } catch {
         setProperties([]);
         setTenants([]);
         setUtilityCycles([]);
-        setInvoices(loadInvoices());
+        setInvoices(loadInvoices(user?.id));
       } finally {
         setIsLoading(false);
       }
     };
     void load();
-  }, []);
+  }, [user?.id]);
 
-  const selectedProperty = properties.find((property) => property.id === formData.propertyId);
-  const selectedUnit = selectedProperty?.units.find((unit) => unit.id === formData.unitId);
+  const selectedProperty = properties.find(
+    (property) => property.id === formData.propertyId,
+  );
+  const selectedUnit = selectedProperty?.units.find(
+    (unit) => unit.id === formData.unitId,
+  );
   const matchedTenant =
     tenants.find(
-      (tenant) => tenant.propertyId === formData.propertyId && tenant.unitId === formData.unitId,
+      (tenant) =>
+        tenant.propertyId === formData.propertyId &&
+        tenant.unitId === formData.unitId,
     ) ?? null;
   const matchedUtilityCycle =
     selectedUnit && formData.propertyId
@@ -93,19 +119,27 @@ const Invoices = () => {
         )
       : undefined;
   const computedBaseRent = selectedUnit?.monthlyRent ?? 0;
-  const computedUtilities = matchedUtilityCycle ? calculateUtilityCharge(matchedUtilityCycle) : 0;
+  const computedUtilities = matchedUtilityCycle
+    ? calculateUtilityCharge(matchedUtilityCycle)
+    : 0;
   const computedTotal = computedBaseRent + computedUtilities;
   const summary = useMemo(() => {
     const today = new Date().toISOString().slice(0, 10);
     const totalInvoices = invoices.length;
     const totalAmount = invoices.reduce((sum, inv) => sum + inv.amount, 0);
     const paid = invoices.filter((inv) => inv.status === "Paid").length;
-    const paidAmount = invoices.filter((inv) => inv.status === "Paid").reduce((sum, inv) => sum + inv.amount, 0);
+    const paidAmount = invoices
+      .filter((inv) => inv.status === "Paid")
+      .reduce((sum, inv) => sum + inv.amount, 0);
     const draftCount = invoices.filter((inv) => inv.status === "Draft").length;
     const sentCount = invoices.filter((inv) => inv.status === "Sent").length;
     const unpaidCount = invoices.filter((inv) => inv.status !== "Paid").length;
-    const unpaidAmount = invoices.filter((inv) => inv.status !== "Paid").reduce((sum, inv) => sum + inv.amount, 0);
-    const overdueCount = invoices.filter((inv) => inv.status !== "Paid" && inv.dueDate < today).length;
+    const unpaidAmount = invoices
+      .filter((inv) => inv.status !== "Paid")
+      .reduce((sum, inv) => sum + inv.amount, 0);
+    const overdueCount = invoices.filter(
+      (inv) => inv.status !== "Paid" && inv.dueDate < today,
+    ).length;
     const overdueAmount = invoices
       .filter((inv) => inv.status !== "Paid" && inv.dueDate < today)
       .reduce((sum, inv) => sum + inv.amount, 0);
@@ -125,16 +159,24 @@ const Invoices = () => {
   }, [invoices]);
 
   const getInvoiceStatusBadgeClass = (status: Invoice["status"]) => {
-    if (status === "Paid") return "bg-emerald-100 text-emerald-800 border border-emerald-200";
-    if (status === "Sent") return "bg-blue-100 text-blue-800 border border-blue-200";
+    if (status === "Paid")
+      return "bg-emerald-100 text-emerald-800 border border-emerald-200";
+    if (status === "Sent")
+      return "bg-blue-100 text-blue-800 border border-blue-200";
     return "bg-amber-100 text-amber-800 border border-amber-200";
   };
 
   const generateInvoice = async () => {
-    if (!formData.propertyId || !formData.unitId || !matchedTenant || !selectedUnit) {
+    if (
+      !formData.propertyId ||
+      !formData.unitId ||
+      !matchedTenant ||
+      !selectedUnit
+    ) {
       toast({
         title: "Cannot generate invoice",
-        description: "Please select a property and room that has an assigned tenant.",
+        description:
+          "Please select a property and room that has an assigned tenant.",
         variant: "destructive",
       });
       return;
@@ -158,7 +200,7 @@ const Invoices = () => {
       const next = res.invoice as Invoice;
       const updated = [next, ...invoices];
       setInvoices(updated);
-      saveInvoices(updated);
+      saveInvoices(updated, user?.id);
     } catch {
       const next: Invoice = {
         id: `inv-${Date.now()}`,
@@ -176,7 +218,7 @@ const Invoices = () => {
       };
       const updated = [next, ...invoices];
       setInvoices(updated);
-      saveInvoices(updated);
+      saveInvoices(updated, user?.id);
     } finally {
       setIsGenerating(false);
     }
@@ -194,13 +236,13 @@ const Invoices = () => {
 
     // Theme palette (matches index.css light mode)
     const C = {
-      primary:   [18, 18, 18]   as [number,number,number], // hsl(0 0% 7%)
-      accent:    [230, 168, 61] as [number,number,number], // hsl(38 77% 57%)
-      secondary: [242, 238, 232] as [number,number,number], // hsl(36 27% 93%)
-      border:    [230, 230, 230] as [number,number,number], // hsl(0 0% 90%)
-      muted:     [107, 107, 107] as [number,number,number], // hsl(0 0% 42%)
-      white:     [255, 255, 255] as [number,number,number],
-      success:   [76, 175, 79]  as [number,number,number], // hsl(122 39% 49%)
+      primary: [18, 18, 18] as [number, number, number], // hsl(0 0% 7%)
+      accent: [230, 168, 61] as [number, number, number], // hsl(38 77% 57%)
+      secondary: [242, 238, 232] as [number, number, number], // hsl(36 27% 93%)
+      border: [230, 230, 230] as [number, number, number], // hsl(0 0% 90%)
+      muted: [107, 107, 107] as [number, number, number], // hsl(0 0% 42%)
+      white: [255, 255, 255] as [number, number, number],
+      success: [76, 175, 79] as [number, number, number], // hsl(122 39% 49%)
     };
 
     const doc = new jsPDF({ unit: "mm", format: "a4" });
@@ -234,23 +276,34 @@ const Invoices = () => {
     doc.setTextColor(...C.white);
     doc.text("INVOICE", pageW - margin, 12, { align: "right" });
 
-    const shortId = invoice.id.length > 20 ? invoice.id.slice(0, 8).toUpperCase() : invoice.id;
+    const shortId =
+      invoice.id.length > 20
+        ? invoice.id.slice(0, 8).toUpperCase()
+        : invoice.id;
     doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...C.accent);
     doc.text(`#${shortId}`, pageW - margin, 19, { align: "right" });
 
     // ── Status badge ──────────────────────────────────────────────
-    let badgeBg: [number,number,number] = C.muted;
-    let badgeFg: [number,number,number] = C.white;
-    if (invoice.status === "Paid") { badgeBg = C.success; badgeFg = C.white; }
-    if (invoice.status === "Sent") { badgeBg = C.accent;  badgeFg = C.primary; }
+    let badgeBg: [number, number, number] = C.muted;
+    let badgeFg: [number, number, number] = C.white;
+    if (invoice.status === "Paid") {
+      badgeBg = C.success;
+      badgeFg = C.white;
+    }
+    if (invoice.status === "Sent") {
+      badgeBg = C.accent;
+      badgeFg = C.primary;
+    }
     doc.setFillColor(...badgeBg);
     doc.roundedRect(pageW - margin - 22, 31, 22, 8, 2, 2, "F");
     doc.setTextColor(...badgeFg);
     doc.setFontSize(8);
     doc.setFont("helvetica", "bold");
-    doc.text(invoice.status.toUpperCase(), pageW - margin - 11, 36.5, { align: "center" });
+    doc.text(invoice.status.toUpperCase(), pageW - margin - 11, 36.5, {
+      align: "center",
+    });
 
     // ── Meta row ──────────────────────────────────────────────────
     doc.setTextColor(...C.muted);
@@ -293,7 +346,11 @@ const Invoices = () => {
 
     y += 5;
     doc.text(tenant?.phone ?? "N/A", margin, y);
-    doc.text(`Period: ${formatPeriodRangeLabel(invoice.periodStart, invoice.periodEnd)}`, margin + 90, y);
+    doc.text(
+      `Period: ${formatPeriodRangeLabel(invoice.periodStart, invoice.periodEnd)}`,
+      margin + 90,
+      y,
+    );
 
     // ── Divider ───────────────────────────────────────────────────
     y += 10;
@@ -318,7 +375,10 @@ const Invoices = () => {
       { label: "Monthly Base Rent", amount: baseRent },
     ];
     if (utilitiesTotal > 0) {
-      lineItems.push({ label: "Utilities (Electricity + Water)", amount: utilitiesTotal });
+      lineItems.push({
+        label: "Utilities (Electricity + Water)",
+        amount: utilitiesTotal,
+      });
     }
 
     y += 14;
@@ -359,7 +419,9 @@ const Invoices = () => {
     doc.setTextColor(...C.accent);
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
-    doc.text(phpFmt(invoice.amount), pageW - margin - 3, y + 1, { align: "right" });
+    doc.text(phpFmt(invoice.amount), pageW - margin - 3, y + 1, {
+      align: "right",
+    });
 
     // ── Footer ────────────────────────────────────────────────────
     const footerY = 282;
@@ -370,8 +432,15 @@ const Invoices = () => {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(...C.muted);
-    doc.text("This is a system-generated invoice. KwenTech Rental Management.", pageW / 2, footerY - 1, { align: "center" });
-    doc.text(`Invoice ID: ${invoice.id}`, pageW / 2, footerY + 4, { align: "center" });
+    doc.text(
+      "This is a system-generated invoice. KwenTech Rental Management.",
+      pageW / 2,
+      footerY - 1,
+      { align: "center" },
+    );
+    doc.text(`Invoice ID: ${invoice.id}`, pageW / 2, footerY + 4, {
+      align: "center",
+    });
 
     const blob = doc.output("blob");
     const blobUrl = URL.createObjectURL(blob);
@@ -384,9 +453,11 @@ const Invoices = () => {
     try {
       const res = await api.updateInvoice(invoice.id, { status: "Paid" });
       const updatedInvoice = res.invoice as Invoice;
-      const updated = invoices.map((inv) => (inv.id === invoice.id ? updatedInvoice : inv));
+      const updated = invoices.map((inv) =>
+        inv.id === invoice.id ? updatedInvoice : inv,
+      );
       setInvoices(updated);
-      saveInvoices(updated);
+      saveInvoices(updated, user?.id);
       toast({
         title: "Invoice updated",
         description: "Invoice marked as Paid.",
@@ -396,7 +467,7 @@ const Invoices = () => {
         inv.id === invoice.id ? ({ ...inv, status: "Paid" } as Invoice) : inv,
       );
       setInvoices(updated);
-      saveInvoices(updated);
+      saveInvoices(updated, user?.id);
       toast({
         title: "Invoice updated locally",
         description: "Invoice marked as Paid (offline mode).",
@@ -426,7 +497,10 @@ const Invoices = () => {
                 Select property and room, review details, then generate invoice.
               </p>
             </div>
-            <Button onClick={() => setIsDialogOpen(true)} className="gap-2 w-fit bg-white text-slate-900 hover:bg-white/90">
+            <Button
+              onClick={() => setIsDialogOpen(true)}
+              className="gap-2 w-fit bg-white text-slate-900 hover:bg-white/90"
+            >
               <FilePlus2 className="h-4 w-4" /> Generate Invoice
             </Button>
           </div>
@@ -437,9 +511,15 @@ const Invoices = () => {
                   <CheckCircle2 className="h-4 w-4" />
                 </div>
                 <div className="text-right">
-                  <p className="text-xs font-medium text-slate-500">Paid Invoices</p>
-                  <p className="mt-1 text-3xl font-bold leading-none">{formatPhp(summary.paidAmount)}</p>
-                  <p className="mt-2 text-xs text-slate-500">{summary.paid} settled invoices</p>
+                  <p className="text-xs font-medium text-slate-500">
+                    Paid Invoices
+                  </p>
+                  <p className="mt-1 text-3xl font-bold leading-none">
+                    {formatPhp(summary.paidAmount)}
+                  </p>
+                  <p className="mt-2 text-xs text-slate-500">
+                    {summary.paid} settled invoices
+                  </p>
                 </div>
               </div>
             </div>
@@ -449,9 +529,15 @@ const Invoices = () => {
                   <WalletCards className="h-4 w-4" />
                 </div>
                 <div className="text-right">
-                  <p className="text-xs font-medium text-slate-500">Unpaid Balance</p>
-                  <p className="mt-1 text-3xl font-bold leading-none">{formatPhp(summary.unpaidAmount)}</p>
-                  <p className="mt-2 text-xs text-slate-500">{summary.unpaidCount} active receivables</p>
+                  <p className="text-xs font-medium text-slate-500">
+                    Unpaid Balance
+                  </p>
+                  <p className="mt-1 text-3xl font-bold leading-none">
+                    {formatPhp(summary.unpaidAmount)}
+                  </p>
+                  <p className="mt-2 text-xs text-slate-500">
+                    {summary.unpaidCount} active receivables
+                  </p>
                 </div>
               </div>
             </div>
@@ -461,8 +547,12 @@ const Invoices = () => {
                   <Clock3 className="h-4 w-4" />
                 </div>
                 <div className="text-right">
-                  <p className="text-xs font-medium text-slate-500">Pending Invoices</p>
-                  <p className="mt-1 text-3xl font-bold leading-none">{summary.sentCount + summary.draftCount}</p>
+                  <p className="text-xs font-medium text-slate-500">
+                    Pending Invoices
+                  </p>
+                  <p className="mt-1 text-3xl font-bold leading-none">
+                    {summary.sentCount + summary.draftCount}
+                  </p>
                   <p className="mt-2 text-xs text-slate-500">
                     {summary.sentCount} sent • {summary.draftCount} draft
                   </p>
@@ -476,8 +566,12 @@ const Invoices = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-medium text-slate-500">Overdue</p>
-                  <p className="mt-1 text-3xl font-bold leading-none">{formatPhp(summary.overdueAmount)}</p>
-                  <p className="mt-2 text-xs text-slate-500">{summary.overdueCount} past due invoices</p>
+                  <p className="mt-1 text-3xl font-bold leading-none">
+                    {formatPhp(summary.overdueAmount)}
+                  </p>
+                  <p className="mt-2 text-xs text-slate-500">
+                    {summary.overdueCount} past due invoices
+                  </p>
                 </div>
               </div>
             </div>
@@ -489,10 +583,15 @@ const Invoices = () => {
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
                 <CardTitle className="text-xl">Invoice Directory</CardTitle>
-                <p className="text-sm text-muted-foreground">Track billing, due dates, and generated invoice files.</p>
+                <p className="text-sm text-muted-foreground">
+                  Track billing, due dates, and generated invoice files.
+                </p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline" className="w-fit rounded-full px-3 py-1 text-xs">
+                <Badge
+                  variant="outline"
+                  className="w-fit rounded-full px-3 py-1 text-xs"
+                >
                   {invoices.length} invoice{invoices.length === 1 ? "" : "s"}
                 </Badge>
               </div>
@@ -508,49 +607,101 @@ const Invoices = () => {
                 <table className="w-full min-w-[860px] text-sm">
                   <thead className="bg-muted/30">
                     <tr className="text-left">
-                      <th className="px-5 py-3.5 font-medium text-muted-foreground">Tenant</th>
-                      <th className="px-5 py-3.5 font-medium text-muted-foreground">Property</th>
-                      <th className="px-5 py-3.5 font-medium text-muted-foreground">Period</th>
-                      <th className="px-5 py-3.5 font-medium text-muted-foreground">Due Date</th>
-                      <th className="px-5 py-3.5 font-medium text-muted-foreground">Charges</th>
-                      <th className="px-5 py-3.5 font-medium text-muted-foreground">Status</th>
-                      <th className="px-5 py-3.5 font-medium text-muted-foreground text-right">Total</th>
-                      <th className="px-5 py-3.5 font-medium text-muted-foreground text-right">Action</th>
+                      <th className="px-5 py-3.5 font-medium text-muted-foreground">
+                        Tenant
+                      </th>
+                      <th className="px-5 py-3.5 font-medium text-muted-foreground">
+                        Property
+                      </th>
+                      <th className="px-5 py-3.5 font-medium text-muted-foreground">
+                        Period
+                      </th>
+                      <th className="px-5 py-3.5 font-medium text-muted-foreground">
+                        Due Date
+                      </th>
+                      <th className="px-5 py-3.5 font-medium text-muted-foreground">
+                        Charges
+                      </th>
+                      <th className="px-5 py-3.5 font-medium text-muted-foreground">
+                        Status
+                      </th>
+                      <th className="px-5 py-3.5 font-medium text-muted-foreground text-right">
+                        Total
+                      </th>
+                      <th className="px-5 py-3.5 font-medium text-muted-foreground text-right">
+                        Action
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {invoices.map((invoice) => {
-                      const tenant = tenants.find((t) => t.id === invoice.tenantId);
-                      const property = properties.find((p) => p.id === invoice.propertyId);
+                      const tenant = tenants.find(
+                        (t) => t.id === invoice.tenantId,
+                      );
+                      const property = properties.find(
+                        (p) => p.id === invoice.propertyId,
+                      );
                       return (
-                        <tr key={invoice.id} className="border-t hover:bg-muted/20">
-                          <td className="px-5 py-3.5 font-medium">{tenant?.fullName ?? "Unknown Tenant"}</td>
-                          <td className="px-5 py-3.5 text-muted-foreground">{property?.name ?? "Unknown Property"}</td>
-                          <td className="px-5 py-3.5 text-muted-foreground">
-                            {formatPeriodRangeLabel(invoice.periodStart, invoice.periodEnd)}
+                        <tr
+                          key={invoice.id}
+                          className="border-t hover:bg-muted/20"
+                        >
+                          <td className="px-5 py-3.5 font-medium">
+                            {tenant?.fullName ?? "Unknown Tenant"}
                           </td>
-                          <td className="px-5 py-3.5 text-muted-foreground">{invoice.dueDate}</td>
+                          <td className="px-5 py-3.5 text-muted-foreground">
+                            {property?.name ?? "Unknown Property"}
+                          </td>
+                          <td className="px-5 py-3.5 text-muted-foreground">
+                            {formatPeriodRangeLabel(
+                              invoice.periodStart,
+                              invoice.periodEnd,
+                            )}
+                          </td>
+                          <td className="px-5 py-3.5 text-muted-foreground">
+                            {invoice.dueDate}
+                          </td>
                           <td className="px-5 py-3.5">
                             <div className="space-y-1 text-xs text-muted-foreground">
-                              <p>Base: {formatPhp(invoice.baseRent ?? invoice.amount)}</p>
-                              <p>Utilities: {formatPhp(invoice.utilitiesTotal ?? 0)}</p>
+                              <p>
+                                Base:{" "}
+                                {formatPhp(invoice.baseRent ?? invoice.amount)}
+                              </p>
+                              <p>
+                                Utilities:{" "}
+                                {formatPhp(invoice.utilitiesTotal ?? 0)}
+                              </p>
                             </div>
                           </td>
                           <td className="px-5 py-3.5">
-                            <Badge className={getInvoiceStatusBadgeClass(invoice.status)}>{invoice.status}</Badge>
+                            <Badge
+                              className={getInvoiceStatusBadgeClass(
+                                invoice.status,
+                              )}
+                            >
+                              {invoice.status}
+                            </Badge>
                           </td>
-                          <td className="px-5 py-3.5 text-right font-semibold">{formatPhp(invoice.amount)}</td>
+                          <td className="px-5 py-3.5 text-right font-semibold">
+                            {formatPhp(invoice.amount)}
+                          </td>
                           <td className="px-5 py-3.5 text-right">
                             <div className="flex justify-end gap-2">
                               <Button
                                 size="sm"
-                                variant={invoice.status === "Paid" ? "secondary" : "default"}
+                                variant={
+                                  invoice.status === "Paid"
+                                    ? "secondary"
+                                    : "default"
+                                }
                                 className="gap-1"
                                 onClick={() => void markInvoiceAsPaid(invoice)}
                                 disabled={invoice.status === "Paid"}
                               >
                                 <CheckCircle2 className="h-3.5 w-3.5" />
-                                {invoice.status === "Paid" ? "Paid" : "Mark as Paid"}
+                                {invoice.status === "Paid"
+                                  ? "Paid"
+                                  : "Mark as Paid"}
                               </Button>
                               <Button
                                 size="sm"
@@ -613,20 +764,29 @@ const Invoices = () => {
                 <Select
                   value={formData.unitId}
                   onValueChange={(value) => {
-                    const property = properties.find((p) => p.id === formData.propertyId);
+                    const property = properties.find(
+                      (p) => p.id === formData.propertyId,
+                    );
                     const unit = property?.units.find((u) => u.id === value);
                     const tenant = tenants.find(
-                      (t) => t.propertyId === formData.propertyId && t.unitId === value,
+                      (t) =>
+                        t.propertyId === formData.propertyId &&
+                        t.unitId === value,
                     );
                     const unitLabel = unit?.label ?? "";
                     const latestCycle = utilityCycles
                       .filter(
                         (cycle) =>
-                          cycle.propertyId === formData.propertyId && cycle.unitId === value,
+                          cycle.propertyId === formData.propertyId &&
+                          cycle.unitId === value,
                       )
-                      .sort((a, b) => (b.periodEnd ?? "").localeCompare(a.periodEnd ?? ""))[0];
-                    const periodStart = latestCycle?.periodStart ?? currentRange.periodStart;
-                    const periodEnd = latestCycle?.periodEnd ?? currentRange.periodEnd;
+                      .sort((a, b) =>
+                        (b.periodEnd ?? "").localeCompare(a.periodEnd ?? ""),
+                      )[0];
+                    const periodStart =
+                      latestCycle?.periodStart ?? currentRange.periodStart;
+                    const periodEnd =
+                      latestCycle?.periodEnd ?? currentRange.periodEnd;
                     const utilityCycle =
                       property && unit
                         ? findCycleForUnitAndPeriod(
@@ -639,7 +799,9 @@ const Invoices = () => {
                             value,
                           )
                         : undefined;
-                    const utilitiesTotal = utilityCycle ? calculateUtilityCharge(utilityCycle) : 0;
+                    const utilitiesTotal = utilityCycle
+                      ? calculateUtilityCharge(utilityCycle)
+                      : 0;
                     const total = (unit?.monthlyRent ?? 0) + utilitiesTotal;
                     setFormData((prev) => ({
                       ...prev,
@@ -684,7 +846,9 @@ const Invoices = () => {
                     {formatPhp(computedUtilities)}
                   </p>
                   <p className="font-semibold">
-                    <span className="text-muted-foreground font-normal">Total: </span>
+                    <span className="text-muted-foreground font-normal">
+                      Total:{" "}
+                    </span>
                     {formatPhp(computedTotal)}
                   </p>
                   {!matchedUtilityCycle ? (
@@ -698,7 +862,10 @@ const Invoices = () => {
               <div className="grid gap-2">
                 <Label>Billing Period</Label>
                 <Input
-                  value={formatPeriodRangeLabel(formData.periodStart, formData.periodEnd)}
+                  value={formatPeriodRangeLabel(
+                    formData.periodStart,
+                    formData.periodEnd,
+                  )}
                   readOnly
                   disabled
                 />
@@ -707,26 +874,46 @@ const Invoices = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div className="grid gap-2">
                   <Label>Total (Base Rent + Utilities)</Label>
-                  <Input type="number" value={formData.amount} readOnly disabled />
+                  <Input
+                    type="number"
+                    value={formData.amount}
+                    readOnly
+                    disabled
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label>Due Date</Label>
                   <Input
                     type="date"
                     value={formData.dueDate}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, dueDate: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        dueDate: e.target.value,
+                      }))
+                    }
                     disabled={!matchedTenant}
                   />
                 </div>
               </div>
 
               <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setIsDialogOpen(false)} disabled={isGenerating}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                  disabled={isGenerating}
+                >
                   Cancel
                 </Button>
                 <Button
                   onClick={() => void generateInvoice()}
-                  disabled={!formData.propertyId || !formData.unitId || !matchedTenant || !formData.dueDate || isGenerating}
+                  disabled={
+                    !formData.propertyId ||
+                    !formData.unitId ||
+                    !matchedTenant ||
+                    !formData.dueDate ||
+                    isGenerating
+                  }
                 >
                   {isGenerating ? (
                     <>
