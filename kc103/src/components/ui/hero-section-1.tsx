@@ -150,6 +150,7 @@ export function HeroSection() {
 const menuItems = [
     { name: 'How It Works', href: '#how-it-works' },
     { name: 'Why KwenTech', href: '#benefits' },
+    { name: 'Pricing', href: '#pricing' },
     { name: 'FAQ', href: '#faq' },
     { name: 'Get Started', href: '#get-started' },
 ]

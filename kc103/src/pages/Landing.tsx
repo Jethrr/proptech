@@ -15,6 +15,7 @@ import {
   Linkedin,
   Instagram,
   Youtube,
+  Check,
 } from "lucide-react";
 import kwentechLogo from "@/assets/kwentech.png";
 
@@ -177,6 +178,169 @@ export default function Landing() {
         </div>
       </section>
 
+      <section id="pricing" className="px-4 py-24 sm:px-6 lg:px-8">
+        <div className="container mx-auto max-w-6xl">
+          <motion.div
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.5 }}
+            className="mb-12 text-center"
+          >
+            <span className="inline-flex items-center rounded-full border bg-muted/50 px-3 py-1 text-xs font-medium text-muted-foreground">
+              Pricing
+            </span>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+              Plans that grow with your portfolio
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+              Start free with up to 2 units. Upgrade only when your portfolio demands it — no credit card required.
+            </p>
+          </motion.div>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Free — Micro-Landlord */}
+            <motion.div
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+              whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.45, delay: 0 }}
+              className="flex flex-col rounded-2xl border bg-background p-8 shadow-sm"
+            >
+              <div className="mb-6">
+                <span className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                  Free · Micro-Landlord
+                </span>
+                <p className="mt-3 text-sm text-muted-foreground">Solo owners · 1–2 active units</p>
+                <div className="mt-4 flex items-end gap-1">
+                  <span className="text-4xl font-bold tracking-tight">₱0</span>
+                  <span className="mb-1 text-sm text-muted-foreground">/ month</span>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">Gateway fees only · No card needed · Forever free</p>
+              </div>
+
+              <ul className="mb-8 flex-1 space-y-3">
+                {[
+                  "Up to 2 active units",
+                  "Full access: Properties, Tenants & Billing",
+                  "Automated invoicing",
+                  "Follow-up reminders dashboard",
+                  "Community support",
+                ].map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-sm">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                    <span className="text-muted-foreground">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link to="/register">
+                <Button variant="outline" className="w-full">
+                  Start for Free
+                </Button>
+              </Link>
+            </motion.div>
+
+            {/* Growth — Apartment Owner, highlighted */}
+            <motion.div
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+              whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.45, delay: 0.09 }}
+              className="relative flex flex-col rounded-2xl border-2 border-primary bg-background p-8 shadow-md"
+            >
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                <span className="rounded-full bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground">
+                  Most Popular
+                </span>
+              </div>
+
+              <div className="mb-6">
+                <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  Growth · Apartment Owner
+                </span>
+                <p className="mt-3 text-sm text-muted-foreground">Apartment complexes & boarding houses · 3–20 units</p>
+                <div className="mt-4 flex items-end gap-1">
+                  <span className="text-4xl font-bold tracking-tight">₱799</span>
+                  <span className="mb-1 text-sm text-muted-foreground">/ month</span>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">Predictable flat rate · VAT exclusive</p>
+              </div>
+
+              <ul className="mb-8 flex-1 space-y-3">
+                {[
+                  "3 to 20 active units",
+                  "Full access: all core features",
+                  "Automated invoicing & custom billing cycles",
+                  "Follow-up reminders with history log",
+                  "Weekly & bi-weekly cycles for bedspace / boarding houses",
+                  "Priority email support",
+                ].map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-sm">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link to="/register">
+                <Button className="w-full">
+                  Get Started
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </motion.div>
+
+            {/* Pro Scale — Professional Manager */}
+            <motion.div
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+              whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.45, delay: 0.18 }}
+              className="flex flex-col rounded-2xl border bg-background p-8 shadow-sm"
+            >
+              <div className="mb-6">
+                <span className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                  Pro Scale · Professional Manager
+                </span>
+                <p className="mt-3 text-sm text-muted-foreground">Agencies & full complexes · 21+ units</p>
+                <div className="mt-4 flex items-end gap-1">
+                  <span className="text-4xl font-bold tracking-tight">₱60</span>
+                  <span className="mb-1 text-sm text-muted-foreground">/ door / month</span>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">Dynamic scaling · e.g. 50 units = ₱3,000 / mo · VAT exclusive</p>
+              </div>
+
+              <ul className="mb-8 flex-1 space-y-3">
+                {[
+                  "21+ active units, no ceiling",
+                  "Full access: all core features",
+                  "Revenue scales automatically with your portfolio",
+                  "Multi-user roles for leasing agents & staff",
+                  "BIR-ready financial collection ledgers",
+                  "Priority email & chat support",
+                ].map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-sm">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link to="/register">
+                <Button variant="outline" className="w-full">
+                  Contact Sales
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+
+          <p className="mt-8 text-center text-xs text-muted-foreground">
+            All paid plans billed monthly. Prices VAT exclusive. Upgrade, downgrade, or cancel anytime.
+          </p>
+        </div>
+      </section>
+
       <section id="faq" className="bg-muted/30 px-4 py-24 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-6xl">
           <motion.div
@@ -311,6 +475,11 @@ export default function Landing() {
                 <li>
                   <a href="#features" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
                     POC Scope
+                  </a>
+                </li>
+                <li>
+                  <a href="#pricing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                    Pricing
                   </a>
                 </li>
                 <li>
