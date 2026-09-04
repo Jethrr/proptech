@@ -6,8 +6,9 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 export class ProfileService {
   constructor(private readonly supabaseService: SupabaseService) {}
 
-  async getProfile(userId: string) {
-    const { data, error } = await this.supabaseService.client
+  async getProfile(jwt: string, userId: string) {
+    const db = this.supabaseService.createUserClient(jwt);
+    const { data, error } = await db
       .from('profiles')
       .select('*')
       .eq('id', userId)
@@ -17,7 +18,8 @@ export class ProfileService {
     return { profile: data };
   }
 
-  async updateProfile(user: { id: string; email?: string }, body: UpdateProfileDto) {
+  async updateProfile(jwt: string, user: { id: string; email?: string }, body: UpdateProfileDto) {
+    const db = this.supabaseService.createUserClient(jwt);
     const payload = {
       id: user.id,
       email: user.email,
@@ -26,7 +28,7 @@ export class ProfileService {
       updated_at: new Date().toISOString(),
     };
 
-    const { data, error } = await this.supabaseService.client
+    const { data, error } = await db
       .from('profiles')
       .upsert(payload, { onConflict: 'id' })
       .select('*')

@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { HeroSection } from "@/components/ui/hero-section-1";
 import { TestimonialsSection } from "@/components/ui/testimonials-with-marquee";
 import { motion, useReducedMotion } from "framer-motion";
@@ -41,7 +46,8 @@ export default function Landing() {
         "You can create reminders tied to tenant due dates, reuse message templates, and keep a history log so you know which follow-ups were already sent.",
     },
     {
-      question: "Can I generate invoices even if utility charges change monthly?",
+      question:
+        "Can I generate invoices even if utility charges change monthly?",
       answer:
         "Yes. You can prepare invoice totals per billing cycle, include utility amounts, and review generated invoice records before marking them paid.",
     },
@@ -63,14 +69,15 @@ export default function Landing() {
 
       <section id="how-it-works">
         <TestimonialsSection
-          title="Built for Landlords Across the Philippines"
+          title="Built for small to large scale rental operations"
           description="Landlords use KwenTech to organize rental operations, reduce follow-up delays, and keep billing consistent"
           testimonials={[
             {
               author: {
                 name: "Maria Luis A. Garcia",
                 handle: "@marialuis_rentals",
-                avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face",
+                avatar:
+                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face",
               },
               text: "I used to track rent updates in spreadsheets and chat threads. With KwenTech, my properties and tenant records are now centralized and easy to review.",
             },
@@ -78,7 +85,8 @@ export default function Landing() {
               author: {
                 name: "Jenelyn P. Veña",
                 handle: "@jenelynveña_landlord",
-                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+                avatar:
+                  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
               },
               text: "The reminder flow is straightforward. I can send due-date follow-ups quickly and keep a record of what was sent per tenant.",
             },
@@ -86,7 +94,8 @@ export default function Landing() {
               author: {
                 name: "John B. Tan",
                 handle: "@johnbtan_units",
-                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face",
+                avatar:
+                  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face",
               },
               text: "Invoice generation saves me a lot of repetitive work. I can prepare a billing summary in minutes and simulate an export for each cycle.",
             },
@@ -94,7 +103,8 @@ export default function Landing() {
               author: {
                 name: "Roberto Tan",
                 handle: "@robertotan_rentals",
-                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+                avatar:
+                  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
               },
               text: "For a POC, the workflow already feels complete. Property setup, tenant assignment, reminders, and invoicing all connect well.",
             },
@@ -102,7 +112,8 @@ export default function Landing() {
               author: {
                 name: "Carmen Reyes",
                 handle: "@carmenreyes_landlord",
-                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+                avatar:
+                  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
               },
               text: "My team can now see lease periods and due dates without digging through files. It helps us respond faster and stay organized.",
             },
@@ -110,7 +121,8 @@ export default function Landing() {
               author: {
                 name: "Michael Villanueva",
                 handle: "@mvillanueva_rentalops",
-                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                avatar:
+                  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
               },
               text: "KwenTech gives me one place to run day-to-day rental tasks. It is simple enough to use daily and structured enough to scale.",
             },
@@ -133,27 +145,42 @@ export default function Landing() {
                   Why Landlords Choose KwenTech
                 </span>
                 <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                  Better structure, faster follow-up, and more predictable billing outcomes.
+                  Better structure, faster follow-up, and more predictable
+                  billing outcomes.
                 </h2>
                 <p className="text-lg leading-relaxed text-muted-foreground">
-                  Landlords choose KwenTech because it combines property data, tenant timelines, reminders, and invoice records in one workflow.
-                  This reduces admin friction and helps teams act before issues become overdue.
+                  Landlords choose KwenTech because it combines property data,
+                  tenant timelines, reminders, and invoice records in one
+                  workflow. This reduces admin friction and helps teams act
+                  before issues become overdue.
                 </p>
               </div>
 
               <div className="rounded-2xl border bg-muted/20 p-6">
                 <div className="space-y-4">
                   <div className="rounded-xl border bg-background p-4">
-                    <p className="text-sm font-medium">Operations teams stay aligned</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Shared view for due dates, reminders, and invoice status.</p>
+                    <p className="text-sm font-medium">
+                      Operations teams stay aligned
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Shared view for due dates, reminders, and invoice status.
+                    </p>
                   </div>
                   <div className="rounded-xl border bg-background p-4">
-                    <p className="text-sm font-medium">Fewer missed follow-ups</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Reminder history gives clear visibility on who was contacted and when.</p>
+                    <p className="text-sm font-medium">
+                      Fewer missed follow-ups
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Reminder history gives clear visibility on who was
+                      contacted and when.
+                    </p>
                   </div>
                   <div className="rounded-xl border bg-background p-4">
                     <p className="text-sm font-medium">Faster billing cycles</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Generate invoices quickly from existing tenant and unit records.</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Generate invoices quickly from existing tenant and unit
+                      records.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -169,8 +196,12 @@ export default function Landing() {
                   transition={{ duration: 0.4, delay: index * 0.08 }}
                   className="rounded-xl border bg-muted/20 p-4 text-center"
                 >
-                  <p className="text-2xl font-bold text-primary">{stat.value}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{stat.label}</p>
+                  <p className="text-2xl font-bold text-primary">
+                    {stat.value}
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {stat.label}
+                  </p>
                 </motion.div>
               ))}
             </div>
@@ -194,7 +225,8 @@ export default function Landing() {
               Plans that grow with your portfolio
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-              Start free with up to 2 units. Upgrade only when your portfolio demands it — no credit card required.
+              Start free with up to 2 units. Upgrade only when your portfolio
+              demands it — no credit card required.
             </p>
           </motion.div>
 
@@ -211,12 +243,18 @@ export default function Landing() {
                 <span className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
                   Free · Micro-Landlord
                 </span>
-                <p className="mt-3 text-sm text-muted-foreground">Solo owners · 1–2 active units</p>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Solo owners · 1–2 active units
+                </p>
                 <div className="mt-4 flex items-end gap-1">
                   <span className="text-4xl font-bold tracking-tight">₱0</span>
-                  <span className="mb-1 text-sm text-muted-foreground">/ month</span>
+                  <span className="mb-1 text-sm text-muted-foreground">
+                    / month
+                  </span>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">Gateway fees only · No card needed · Forever free</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Gateway fees only · No card needed · Forever free
+                </p>
               </div>
 
               <ul className="mb-8 flex-1 space-y-3">
@@ -259,12 +297,20 @@ export default function Landing() {
                 <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                   Growth · Apartment Owner
                 </span>
-                <p className="mt-3 text-sm text-muted-foreground">Apartment complexes & boarding houses · 3–20 units</p>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Apartment complexes & boarding houses · 3–20 units
+                </p>
                 <div className="mt-4 flex items-end gap-1">
-                  <span className="text-4xl font-bold tracking-tight">₱799</span>
-                  <span className="mb-1 text-sm text-muted-foreground">/ month</span>
+                  <span className="text-4xl font-bold tracking-tight">
+                    ₱799
+                  </span>
+                  <span className="mb-1 text-sm text-muted-foreground">
+                    / month
+                  </span>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">Predictable flat rate · VAT exclusive</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Predictable flat rate · VAT exclusive
+                </p>
               </div>
 
               <ul className="mb-8 flex-1 space-y-3">
@@ -303,12 +349,18 @@ export default function Landing() {
                 <span className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
                   Pro Scale · Professional Manager
                 </span>
-                <p className="mt-3 text-sm text-muted-foreground">Agencies & full complexes · 21+ units</p>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Agencies & full complexes · 21+ units
+                </p>
                 <div className="mt-4 flex items-end gap-1">
                   <span className="text-4xl font-bold tracking-tight">₱60</span>
-                  <span className="mb-1 text-sm text-muted-foreground">/ door / month</span>
+                  <span className="mb-1 text-sm text-muted-foreground">
+                    / door / month
+                  </span>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">Dynamic scaling · e.g. 50 units = ₱3,000 / mo · VAT exclusive</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Dynamic scaling · e.g. 50 units = ₱3,000 / mo · VAT exclusive
+                </p>
               </div>
 
               <ul className="mb-8 flex-1 space-y-3">
@@ -336,7 +388,8 @@ export default function Landing() {
           </div>
 
           <p className="mt-8 text-center text-xs text-muted-foreground">
-            All paid plans billed monthly. Prices VAT exclusive. Upgrade, downgrade, or cancel anytime.
+            All paid plans billed monthly. Prices VAT exclusive. Upgrade,
+            downgrade, or cancel anytime.
           </p>
         </div>
       </section>
@@ -354,9 +407,12 @@ export default function Landing() {
               <span className="inline-flex items-center rounded-full border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
                 Questions and Answers
               </span>
-              <h2 className="text-3xl font-bold sm:text-4xl">Frequently asked questions from landlords.</h2>
+              <h2 className="text-3xl font-bold sm:text-4xl">
+                Frequently asked questions from landlords.
+              </h2>
               <p className="text-muted-foreground">
-                Clear answers on setup, reminders, invoicing, and whether KwenTech fits your current rental operations.
+                Clear answers on setup, reminders, invoicing, and whether
+                KwenTech fits your current rental operations.
               </p>
             </div>
 
@@ -364,8 +420,12 @@ export default function Landing() {
               <Accordion type="single" collapsible className="w-full">
                 {faqs.map((faq, index) => (
                   <AccordionItem value={`faq-${index}`} key={faq.question}>
-                    <AccordionTrigger className="text-left text-base hover:no-underline">{faq.question}</AccordionTrigger>
-                    <AccordionContent className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</AccordionContent>
+                    <AccordionTrigger className="text-left text-base hover:no-underline">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
+                      {faq.answer}
+                    </AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
@@ -374,13 +434,18 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="get-started" className="bg-primary/5 px-4 py-24 sm:px-6 lg:px-8">
+      <section
+        id="get-started"
+        className="bg-primary/5 px-4 py-24 sm:px-6 lg:px-8"
+      >
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
-            Ready to Simplify <span className="text-gradient">Rental Management</span>?
+            Ready to Simplify{" "}
+            <span className="text-gradient">Rental Management</span>?
           </h2>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-            Start with the POC experience to organize properties, tenants, reminders, and invoices in one dashboard.
+            Start with the POC experience to organize properties, tenants,
+            reminders, and invoices in one dashboard.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link to="/register">
@@ -403,21 +468,33 @@ export default function Landing() {
           <div className="grid grid-cols-1 gap-8 py-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
             <div className="lg:col-span-1">
               <div className="mb-4 flex items-center gap-2">
-                <img src={kwentechLogo} alt="KwenTech Logo" className="h-8 w-auto" />
+                <img
+                  src={kwentechLogo}
+                  alt="KwenTech Logo"
+                  className="h-8 w-auto"
+                />
               </div>
               <p className="mb-6 max-w-xs text-sm text-muted-foreground">
-                Rental management platform for landlords in the Philippines. Centralize records, streamline follow-ups, and standardize invoices.
+                Rental management platform for landlords in the Philippines.
+                Centralize records, streamline follow-ups, and standardize
+                invoices.
               </p>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Mail className="h-4 w-4" />
-                  <a href="mailto:support@kwentech.com" className="transition-colors hover:text-foreground">
+                  <a
+                    href="mailto:support@kwentech.com"
+                    className="transition-colors hover:text-foreground"
+                  >
                     support@kwentech.com
                   </a>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Phone className="h-4 w-4" />
-                  <a href="tel:+639123456789" className="transition-colors hover:text-foreground">
+                  <a
+                    href="tel:+639123456789"
+                    className="transition-colors hover:text-foreground"
+                  >
                     +63 912 345 6789
                   </a>
                 </div>
@@ -432,27 +509,42 @@ export default function Landing() {
               <h3 className="mb-4 font-semibold text-foreground">Product</h3>
               <ul className="space-y-3">
                 <li>
-                  <Link to="/dashboard/properties" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    to="/dashboard/properties"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Properties Management
                   </Link>
                 </li>
                 <li>
-                  <Link to="/dashboard/tenants" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    to="/dashboard/tenants"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Tenants Management
                   </Link>
                 </li>
                 <li>
-                  <Link to="/dashboard/reminders" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    to="/dashboard/reminders"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Reminder Composer
                   </Link>
                 </li>
                 <li>
-                  <Link to="/dashboard/invoices" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    to="/dashboard/invoices"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Invoice Generator
                   </Link>
                 </li>
                 <li>
-                  <Link to="/register" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    to="/register"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Get Started
                   </Link>
                 </li>
@@ -463,32 +555,50 @@ export default function Landing() {
               <h3 className="mb-4 font-semibold text-foreground">Company</h3>
               <ul className="space-y-3">
                 <li>
-                  <a href="#about" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <a
+                    href="#about"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Product Goals
                   </a>
                 </li>
                 <li>
-                  <a href="#how-it-works" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <a
+                    href="#how-it-works"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Key User Flows
                   </a>
                 </li>
                 <li>
-                  <a href="#features" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <a
+                    href="#features"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     POC Scope
                   </a>
                 </li>
                 <li>
-                  <a href="#pricing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <a
+                    href="#pricing"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Pricing
                   </a>
                 </li>
                 <li>
-                  <a href="#faq" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <a
+                    href="#faq"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     FAQ
                   </a>
                 </li>
                 <li>
-                  <a href="#contact" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <a
+                    href="#contact"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Contact
                   </a>
                 </li>
@@ -499,23 +609,34 @@ export default function Landing() {
               <h3 className="mb-4 font-semibold text-foreground">Legal</h3>
               <ul className="mb-6 space-y-3">
                 <li>
-                  <a href="#privacy" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <a
+                    href="#privacy"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#terms" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <a
+                    href="#terms"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Terms of Service
                   </a>
                 </li>
                 <li>
-                  <a href="#cookies" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  <a
+                    href="#cookies"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Cookie Policy
                   </a>
                 </li>
               </ul>
               <div>
-                <h3 className="mb-4 font-semibold text-foreground">Follow Us</h3>
+                <h3 className="mb-4 font-semibold text-foreground">
+                  Follow Us
+                </h3>
                 <div className="flex gap-4">
                   <a
                     href="https://facebook.com"
@@ -574,10 +695,16 @@ export default function Landing() {
               <span>Made for Filipino Landlords</span>
             </div>
             <div className="flex gap-6 text-sm">
-              <Link to="/login" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link
+                to="/login"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
                 Sign In
               </Link>
-              <Link to="/register" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link
+                to="/register"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
                 Sign Up
               </Link>
             </div>
@@ -587,4 +714,3 @@ export default function Landing() {
     </div>
   );
 }
-
