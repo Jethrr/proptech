@@ -222,7 +222,7 @@ export default function Landing() {
               Pricing
             </span>
             <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-              Plans that grow with your portfolio
+              Start Free, Upgrade as You Grow
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
               Start free with up to 2 units. Upgrade only when your portfolio
